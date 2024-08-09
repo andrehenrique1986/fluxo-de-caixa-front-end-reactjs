@@ -6,7 +6,7 @@ const Cabacalho = styled.header.attrs({
 })``;
 
 const TextoPrincipal = styled.h1.attrs({
-    className:  "text-white text-5xl font-bold"  
+    className: "text-white text-5xl font-bold"  
 })``;
 
 const Header = () => {
