@@ -1,18 +1,17 @@
 import React from 'react';
 import './App.css';
-import Header from './components/Header';
-import TituloPrincipal from './components/TituloPrincipal';
-import InputsEBotao from './components/InputsEBotao';
+import PaginaPrincipal from './pages/PaginaPrincipal/PaginaPrincipal';
+import { Provider } from 'react-redux';
+import { store, persistor } from './redux/store'
+import { PersistGate } from 'redux-persist/es/integration/react';
 
-
-function App() {
+const App = () => {
   return (
-    <>
-    <Header />
-    <TituloPrincipal/>
-    <InputsEBotao/>
-    </>
-    
+    <Provider store={store}>
+        <PersistGate loading={null} persistor={persistor}>
+         <PaginaPrincipal />
+        </PersistGate>
+    </Provider>  
   );
 }
 

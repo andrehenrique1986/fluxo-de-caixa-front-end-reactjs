@@ -1,36 +1,43 @@
-import React from "react";
-import styled from "styled-components";
-import BotaoPrincipal from "../BotaoPrincipal";
+import React, { useState } from 'react';
+import styled from 'styled-components';
+import BotaoPrincipal from '../BotaoPrincipal';
+import ModalRegistro from '../Modais/ModalRegistro';
 
 const Container = styled.div.attrs({
-  className: "flex flex-col gap-4 mt-1 p-4",
+  className: 'flex flex-col gap-4 mt-1 p-4',
 })``;
 
 const InputsEBotaoContainer = styled.div.attrs({
-  className: "flex flex-wrap items-center gap-2",
+  className: 'flex flex-wrap items-center gap-2',
 })``;
 
 const Texto = styled.span.attrs({
-  className: "text-black font-bold",
+  className: 'text-black font-bold',
 })``;
 
 const InputData = styled.input.attrs({
-  className: "text-black m-1 p-2 border rounded w-full sm:w-auto",
+  className: 'text-black m-1 p-2 border-gray-300 border-black rounded w-full sm:w-auto',
 })``;
 
 const DivInputs = styled.div.attrs({
-    className: "flex flex-wrap items-center gap-2 w-full"
+  className: 'flex flex-wrap items-center gap-2 w-full',
 })``;
 
 const DivBotao = styled.div.attrs({
-    className: "w-auto"
+  className: 'w-auto'
 })``;
 
 const Espaco = styled.div.attrs({
-  className: "flex-1"
+  className: 'flex-1'
 })``;
 
 const InputsDatas = () => {
+  const [modalNovoRegistro, setModalNovoRegistro] = useState(false);
+
+
+  const abrirModalRegistro = () => setModalNovoRegistro(true);
+  const fecharModalRegistro = () => setModalNovoRegistro(false);
+
   return (
     <Container>
       <InputsEBotaoContainer>
@@ -42,7 +49,8 @@ const InputsDatas = () => {
           <BotaoPrincipal>Buscar</BotaoPrincipal>
           <Espaco />
           <DivBotao>
-          <BotaoPrincipal>Novo Registro</BotaoPrincipal>
+            <BotaoPrincipal onClick={abrirModalRegistro}>Novo Registro</BotaoPrincipal>
+            <ModalRegistro aberto={modalNovoRegistro} fechado={fecharModalRegistro} />
           </DivBotao>
         </DivInputs>
       </InputsEBotaoContainer>
@@ -51,3 +59,4 @@ const InputsDatas = () => {
 };
 
 export default InputsDatas;
+
