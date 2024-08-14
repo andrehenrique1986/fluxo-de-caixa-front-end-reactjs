@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import BotaoPrincipal from '../BotaoPrincipal';
-import ModalRegistro from '../Modais/ModalRegistro';
+
 
 const Container = styled.div.attrs({
   className: 'flex flex-col gap-4 mt-1 p-4',
@@ -32,11 +32,11 @@ const Espaco = styled.div.attrs({
 })``;
 
 const InputsDatas = () => {
-  const [modalNovoRegistro, setModalNovoRegistro] = useState(false);
+  //const [modalNovoRegistro, setModalNovoRegistro] = useState(false);
 
 
-  const abrirModalRegistro = () => setModalNovoRegistro(true);
-  const fecharModalRegistro = () => setModalNovoRegistro(false);
+  //const abrirModalRegistro = () => setModalNovoRegistro(true);
+  //const fecharModalRegistro = () => setModalNovoRegistro(false);
 
   return (
     <Container>
@@ -49,8 +49,7 @@ const InputsDatas = () => {
           <BotaoPrincipal>Buscar</BotaoPrincipal>
           <Espaco />
           <DivBotao>
-            <BotaoPrincipal onClick={abrirModalRegistro}>Novo Registro</BotaoPrincipal>
-            <ModalRegistro aberto={modalNovoRegistro} fechado={fecharModalRegistro} />
+            <BotaoPrincipal>Novo Registro</BotaoPrincipal>
           </DivBotao>
         </DivInputs>
       </InputsEBotaoContainer>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 
 const Container = styled.div.attrs({
@@ -10,49 +10,11 @@ const ModalContainer = styled.div.attrs({
 })``;
 
 
-const ModalRegistro = ({ aberto, fechado }) => {
-
-    const [registros, setRegistros] = useState([]);
-    const [carregando, setCarregando] = useState(true);
-    const [erro, setErro] = useState(null);
-
-    useEffect(() => {
-        const adicionarRegistros = async() => {
-            try {
-                const response = await fetch('https://localhost:44395/Registro/api/adicionarRegistro', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                });
-
-                if (!response.ok){
-                    throw new Error('Erro ao buscar os dados da API');
-                }
-
-                const dados = await response.json();
-                setRegistros(dados);
-            } catch (erro) {
-                setErro(erro);
-            } finally {
-                setCarregando(false);
-            }
-        }
-
-        adicionarRegistros();
-        
-    },[]);
-
-   
-
-  if (!aberto) return null;
-
+const ModalRegistro = () => {
   return (
-    <Container onClick={fechado}>
-      <ModalContainer onClick={(e) => e.stopPropagation()}>
-      <form>
-        <input/>
-      </form>
+    <Container>
+      <ModalContainer>
+      
       </ModalContainer>
     </Container>
   );

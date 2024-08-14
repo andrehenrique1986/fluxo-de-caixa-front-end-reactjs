@@ -1,28 +1,58 @@
-import React, { useState } from "react"
-import styled from "styled-components";
+import React from 'react';
+import ListaCategorias from './ListaCategorias'; // Certifique-se de que o caminho está correto
+import styled from 'styled-components';
 
 
-const Container = styled.div.attrs({
-    className: 'fixed top-0 left-0 right-0 bottom-0 bg-black bg-opacity-50 flex justify-center items-center z-50 '
-  })``;
-  
-  const ModalContainer = styled.div.attrs({
-    className: 'bg-white rounded-lg p-6 max-w-lg w-full shadow-lg relative w-full h-full'
-  })``;
+const SobreposicaoModal = styled.div.attrs({
+    className: `fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50`
+})``;
 
-const ModalCategoria = ({ aberto, fechado}) => {
 
-    const [categoria, setCategoria] = useState([]);
+const ConteudoModal = styled.div.attrs({
+    className: `bg-white rounded-lg shadow-lg max-w-full sm:max-w-4xl w-full relative p-6 text-black`
+})``;
 
-    if(!aberto) return null;
+// Botão de fechar
+const BotaoFechar = styled.button.attrs({
+    className: `absolute top-2 right-2 text-gray-500 hover:text-gray-700`
+})``;
 
-    return(
-        <Container onClick={fechado}>
-            <ModalContainer onClick={(e) => e.stopPropagation()}>
-                <h1>Olá !!!!</h1>
-            </ModalContainer>
-        </Container>
-    )
-}
+// Container para as listas
+const ContainerListas = styled.div.attrs({
+    className: `flex flex-col md:flex-row justify-center space-y-4 md:space-y-0 md:space-x-5`
+})``;
+
+const ModalCategoria = ({ aberto, fechado }) => {
+    if (!aberto) return null;
+
+    return (
+        <SobreposicaoModal>
+            <ConteudoModal>
+                <BotaoFechar onClick={fechado}>
+                    <svg
+                        className="w-6 h-6"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
+                    >
+                        <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            d="M6 18L18 6M6 6l12 12"
+                        ></path>
+                    </svg>
+                </BotaoFechar>
+                <ContainerListas>
+                    <ListaCategorias />
+                </ContainerListas>
+            </ConteudoModal>
+        </SobreposicaoModal>
+    );
+};
 
 export default ModalCategoria;
+
+
+

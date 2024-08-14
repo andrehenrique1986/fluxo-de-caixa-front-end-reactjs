@@ -1,5 +1,7 @@
 const initialState = {
-    categorias: []  
+    categorias: [],
+    subcategorias: [],
+    error: null  
   };
   
   // Função reducer
@@ -8,8 +10,23 @@ const initialState = {
       case 'ADICIONAR_CATEGORIA':
         return {
           ...state,
-          categorias: [...state.categorias, action.payload]  
+          categorias: [...state.categorias, action.payload], 
         };
+        case 'CARREGAR_CATEGORIAS':
+            return {
+                ...state,
+                categorias: action.payload,
+            };
+        case 'CARREGAR_SUBCATEGORIAS':
+            return {
+                ...state,
+                subcategorias: action.payload
+            }
+        case 'ERRO_CATEGORIA':
+            return {
+                ...state,
+                error: action.payload
+            }
       default:
         return state;  
     }
