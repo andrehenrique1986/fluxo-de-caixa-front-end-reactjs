@@ -1,22 +1,26 @@
+const TypesSubcategoria = {
+  ADICIONAR_SUBCATEGORIA: 'ADICIONAR_SUBCATEGORIA',
+  CARREGAR_SUBCATEGORIAS: 'CARREGAR_SUBCATEGORIAS',
+  ERRO_SUBCATEGORIA: 'ERRO_SUBCATEGORIA'
+};
+
 const initialState = {
-    subcategorias: [] ,
-    error: null
-  };
-  
-  
+  subcategorias: [],
+  error: null  
+};
   const subcategoriaReducer = (state = initialState, action) => {
     switch(action.type) {
-      case 'ADICIONAR_SUBCATEGORIA':
+      case TypesSubcategoria.ADICIONAR_SUBCATEGORIA:
         return {
           ...state,
           subcategorias: [...state.subcategorias, action.payload]  
         };
-        case 'CARREGAR_SUBCATEGORIAS':
+        case TypesSubcategoria.CARREGAR_SUBCATEGORIAS:
             return {
                 ...state,
-                subcategorias: [...state.subcategorias, action.payload]
+                subcategorias: action.payload
             };
-        case 'ERRO_SUBCATEGORIA':
+        case TypesSubcategoria.ERRO_SUBCATEGORIA:
             return {
                 ...state,
                 error: action.payload
@@ -25,6 +29,28 @@ const initialState = {
         return state;  
     }
   };
+
   
+
+  const adicionarSubategoria = (subcategoria) => ({
+    type: TypesSubcategoria.ADICIONAR_SUBCATEGORIA,
+    payload: subcategoria
+  });
+  
+  const carregarSubcategorias = (subcategorias) => ({
+    type: TypesSubcategoria.CARREGAR_SUBCATEGORIAS,
+    payload: subcategorias
+  });
+  
+  const erroSubcategoria = (error) => ({
+    type: TypesSubcategoria.ERRO_SUBCATEGORIA,
+    payload: error
+  });
+  
+  export const subcategoriaActions = {
+    adicionarSubategoria,
+    carregarSubcategorias,
+    erroSubcategoria
+  };
 
 export default subcategoriaReducer;

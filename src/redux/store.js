@@ -1,15 +1,18 @@
 import { legacy_createStore as createStore } from 'redux';
 import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage'; 
-import rootReducer from './reducers'; 
+
+import rootReducer from './index'; 
 
 const persistConfig = {
   key: 'root',
-  storage: storage,
-  whitelist: ['categoriaReducer', 'subcategoriaReducer', 'custoReducer', 'fluxoReducer', 'formaDePagamentoReducer', 'registroReducer']
+  storage,
+  whitelist: ['categorias', 'subcategorias'] 
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
-export const store = createStore(persistedReducer);
-export const persistor = persistStore(store);
+const store = createStore(persistedReducer);
+const persistor = persistStore(store);
+
+export { store, persistor };
