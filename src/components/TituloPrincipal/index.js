@@ -5,13 +5,13 @@ const Container = styled.div.attrs({
   className: `bg-[#a1c082] 
               p-3.5 
               text-center 
-              mt-1`
+              mt-1`,
 })``;
 
 const Texto = styled.h2.attrs({
   className: `text-center 
               text-white 
-              text-2xl` 
+              text-2xl`,
 })``;
 
 const TituloPrincipal = () => {
@@ -23,4 +23,3 @@ const TituloPrincipal = () => {
 };
 
 export default TituloPrincipal;
-

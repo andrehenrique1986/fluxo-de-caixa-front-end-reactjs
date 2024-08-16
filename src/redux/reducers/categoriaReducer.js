@@ -1,72 +1,123 @@
 const TypesCategoria = {
-  ADICIONAR_CATEGORIA: 'ADICIONAR_CATEGORIA',
-  CARREGAR_CATEGORIAS: 'CARREGAR_CATEGORIAS',
-  CARREGAR_NOME_SUBCATEGORIAS: 'CARREGAR_NOME_SUBCATEGORIAS',
-  ERRO_CATEGORIA: 'ERRO_CATEGORIA'
+  ADICIONAR_CATEGORIA_REDUCER: "ADICIONAR_CATEGORIA_REDUCER",
+  CARREGAR_CATEGORIAS_REDUCER: "CARREGAR_CATEGORIAS_REDUCER",
+  CARREGAR_CATEGORIA_POR_ID_REDUCER: "CARREGAR_CATEGORIA_POR_ID_REDUCER",
+  CARREGAR_NOME_SUBCATEGORIAS_REDUCER: "CARREGAR_NOME_SUBCATEGORIAS_REDUCER",
+  ATUALIZAR_CATEGORIA_REDUCER: "ATUALIZAR_CATEGORIA_REDUCER",
+  EXCLUIR_CATEGORIA_REDUCER: "EXCLUIR_CATEGORIA_REDUCER",
+  ERRO_CATEGORIA_REDUCER: "ERRO_CATEGORIA_REDUCER",
 };
 
 const initialState = {
-  categorias: [],
+  categorias: [ {
+    idCategoria: null,
+    dscCategoria: ''
+  }],
   nomeSubcategorias: [],
-  error: null  
+  categoriaPorId: null,
+  error: null,
 };
-  
- 
-  const categoriaReducer = (state = initialState, action) => {
-    switch(action.type) {
-      case TypesCategoria.ADICIONAR_CATEGORIA:
-        return {
-          ...state,
-          categorias: [...state.categorias, action.payload] 
-        }
-      case TypesCategoria.CARREGAR_CATEGORIAS:
-        return {
-          ...state,
-          categorias: action.payload
-        }
-      case TypesCategoria.CARREGAR_NOME_SUBCATEGORIAS:
-        return {
-          ...state,
-          nomeSubcategorias: action.payload
-        }
-      case TypesCategoria.ERRO_CATEGORIA:
-        return {
-          ...state,
-          error: action.payload
-        }
-      default:
-        return state;  
-    }
-  };
-  
- 
 
-  export const adicionarCategoria = (categoria) => ({
-    type: TypesCategoria.ADICIONAR_CATEGORIA,
-    payload: categoria
-  });
-  
-   const carregarCategorias = (categorias) => ({
-    type: TypesCategoria.CARREGAR_CATEGORIAS,
-    payload: categorias
-  });
-  
-  const carregarNomeSubcategorias = (nomeSubcategorias) => ({
-    type: TypesCategoria.CARREGAR_NOME_SUBCATEGORIAS,
-    payload: nomeSubcategorias
-  })
+const categoriaReducer = (state = initialState, action) => {
+  switch (action.type) {
+    case TypesCategoria.ADICIONAR_CATEGORIA_REDUCER:
+      return {
+        ...state,
+        categorias: [...state.categorias, action.payload],
+      };
+    case TypesCategoria.CARREGAR_CATEGORIAS_REDUCER:
+      return {
+        ...state,
+        categorias: action.payload,
+      };
+    case TypesCategoria.CARREGAR_CATEGORIA_POR_ID_REDUCER:
+      return {
+        ...state,
+        categoriaPorId: action.payload,
+      };
+    case TypesCategoria.CARREGAR_NOME_SUBCATEGORIAS_REDUCER:
+      return {
+        ...state,
+        nomeSubcategorias: action.payload,
+      };
+    case TypesCategoria.ATUALIZAR_CATEGORIA_REDUCER:
+      return {
+        ...state,
+        categorias: state.categorias.map((categoria) =>
+          categoria.id === action.payload.id ? action.payload : categoria
+        ),
+        categoriaPorId:
+          state.categoriaPorId && state.categoriaPorId.id === action.payload.id
+            ? action.payload
+            : state.categoriaPorId,
+      };
+    case TypesCategoria.EXCLUIR_CATEGORIA_REDUCER:
+      return {
+        ...state,
+        categorias: state.categorias.filter(
+          (categoria) => categoria.id !== action.payload
+        ),
+        categoriaPorId:
+          state.categoriaPorId && state.categoriaPorId.id === action.payload
+            ? null
+            : state.categoriaPorId,
+      };
+    case TypesCategoria.ERRO_CATEGORIA_REDUCER:
+      return {
+        ...state,
+        error: action.payload,
+      };
+    default:
+      return state;
+  }
+};
 
-  const erroCategoria = (error) => ({
-    type: TypesCategoria.ERRO_CATEGORIA,
-    payload: error
-  });
+export const adicionarCategoriaReducer = (categoria) => ({
+  type: TypesCategoria.ADICIONAR_CATEGORIA_REDUCER,
+  payload: {
+    idCategoria: categoria.idCategoria,
+    dscCategoria: categoria.dscCategoria
+  },
+});
 
-  export const categoriaActions = {
-    adicionarCategoria,
-    carregarCategorias,
-    carregarNomeSubcategorias,
-    erroCategoria
-  };
+const carregarCategoriasReducer = (categorias) => ({
+  type: TypesCategoria.CARREGAR_CATEGORIAS_REDUCER,
+  payload: categorias,
+});
+
+const carregarCategoriasPorIdReducer = (categoriaPorId) => ({
+  type: TypesCategoria.CARREGAR_CATEGORIA_POR_ID_REDUCER,
+  payload: categoriaPorId,
+});
+
+const carregarNomeSubcategoriasReducer = (nomeSubcategorias) => ({
+  type: TypesCategoria.CARREGAR_NOME_SUBCATEGORIAS_REDUCER,
+  payload: nomeSubcategorias,
+});
+
+const atualizarCategoriaReducer = (categoria) => ({
+  type: TypesCategoria.ATUALIZAR_CATEGORIA_REDUCER,
+  payload: categoria,
+});
+
+const excluirCategoriaReducer = (idCategoria) => ({
+  type: TypesCategoria.EXCLUIR_CATEGORIA_REDUCER,
+  payload: idCategoria,
+});
+
+const erroCategoriaReducer = (error) => ({
+  type: TypesCategoria.ERRO_CATEGORIA_REDUCER,
+  payload: error,
+});
+
+export const categoriaActions = {
+  adicionarCategoriaReducer,
+  carregarCategoriasReducer,
+  carregarCategoriasPorIdReducer,
+  carregarNomeSubcategoriasReducer,
+  atualizarCategoriaReducer,
+  excluirCategoriaReducer,
+  erroCategoriaReducer,
+};
 
 export default categoriaReducer;
-  

@@ -5,8 +5,8 @@ const Botao = styled.button.attrs({
   className: `bg-custom-blue 
               text-white 
               text-sm 
-              py-2 
-              px-4 
+              py-3 
+              px-6 
               border-none 
               rounded-full 
               cursor-pointer 

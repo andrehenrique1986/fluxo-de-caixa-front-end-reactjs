@@ -28,6 +28,33 @@ export const listarSubcategoria = async () => {
       throw error;
     }
   };
+
+  export const listarSubcategoriaPorId = async (id) => {
+    try {
+      const response = await api.get(`api/recuperarSubcategoriaPorId/${id}`);
+      return response.data;
+    } catch (error) {
+      console.error("Erro ao listar as subcategorias pelo ID", error);
+    }
+  };
+  
+  export const atualizarSubcategoria = async (id, subcategoria) => {
+    try {
+      const response = await api.put(`api/atualizarSubcategoria/${id}`, subcategoria);
+      return response.data;
+    } catch (error) {
+      console.error("Erro ao atualizar subcategoria", error);
+    }
+  };
+  
+  export const excluirSubcategoria = async (id) => {
+    try {
+      const response = await api.delete(`api/excluirSubcategoria/${id}`);
+      return response.data;
+    } catch (error) {
+      console.error("Erro ao excluir subcategoria", error);
+    }
+  };
   
 
 
