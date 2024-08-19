@@ -4,18 +4,20 @@ const TypesCategoria = {
   CARREGAR_CATEGORIA_POR_ID_REDUCER: "CARREGAR_CATEGORIA_POR_ID_REDUCER",
   CARREGAR_NOME_SUBCATEGORIAS_REDUCER: "CARREGAR_NOME_SUBCATEGORIAS_REDUCER",
   ATUALIZAR_CATEGORIA_REDUCER: "ATUALIZAR_CATEGORIA_REDUCER",
+  SET_CATEGORIA_SELECIONADA_REDUCER: "SET_CATEGORIA_SELECIONADA_REDUCER",
   EXCLUIR_CATEGORIA_REDUCER: "EXCLUIR_CATEGORIA_REDUCER",
   ERRO_CATEGORIA_REDUCER: "ERRO_CATEGORIA_REDUCER",
 };
 
 const initialState = {
-  categorias: [ {
-    idCategoria: null,
+  categorias: [{
+    idCategoria: 0,
     dscCategoria: ''
   }],
   nomeSubcategorias: [],
   categoriaPorId: null,
   error: null,
+  categoriaSelecionada: null
 };
 
 const categoriaReducer = (state = initialState, action) => {
@@ -51,6 +53,11 @@ const categoriaReducer = (state = initialState, action) => {
             ? action.payload
             : state.categoriaPorId,
       };
+    case TypesCategoria.SET_CATEGORIA_SELECIONADA_REDUCER:
+      return {
+        ...state,
+        categoriaSelecionada: action.payload
+      }
     case TypesCategoria.EXCLUIR_CATEGORIA_REDUCER:
       return {
         ...state,
@@ -100,6 +107,11 @@ const atualizarCategoriaReducer = (categoria) => ({
   payload: categoria,
 });
 
+const setCategoriaSelecionadaReducer = (categoriaSelecionada) => ({
+  type: TypesCategoria.SET_CATEGORIA_SELECIONADA_REDUCER,
+  payload: categoriaSelecionada
+});
+
 const excluirCategoriaReducer = (idCategoria) => ({
   type: TypesCategoria.EXCLUIR_CATEGORIA_REDUCER,
   payload: idCategoria,
@@ -116,6 +128,7 @@ export const categoriaActions = {
   carregarCategoriasPorIdReducer,
   carregarNomeSubcategoriasReducer,
   atualizarCategoriaReducer,
+  setCategoriaSelecionadaReducer,
   excluirCategoriaReducer,
   erroCategoriaReducer,
 };

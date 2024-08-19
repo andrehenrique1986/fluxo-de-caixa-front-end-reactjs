@@ -10,7 +10,7 @@ const api = axios.create({
   },
 });
 
-export const adicionarSubcategoria = async (subcategoria) => {
+export const adicionarNovaSubcategoria = async (subcategoria) => {
     try {
        const response = await api.post('api/adicionarSubcategoria', subcategoria);
        return response.data; 

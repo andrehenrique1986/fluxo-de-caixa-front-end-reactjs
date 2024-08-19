@@ -1,5 +1,5 @@
 import React from 'react';
-import ListaCategorias from './ListaCategorias'; // Certifique-se de que o caminho está correto
+import ListaCategorias from './ListaCategorias'; 
 import styled from 'styled-components';
 
 

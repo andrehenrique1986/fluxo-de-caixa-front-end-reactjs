@@ -10,7 +10,7 @@ const Botao = styled.button.attrs({
               border-none 
               rounded-full 
               cursor-pointer 
-              hover:bg-custom-dark-blue`
+              hover:bg-custom-dark-blue flex justify-center mt-4`
 })``;
 
 const BotaoPrincipal = ({children, onClick}) => {

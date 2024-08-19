@@ -1,63 +1,91 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
-import {
-  adicionarNovaCategoria,
-  listarCategoria,
-} from "../../../../api/categoriaAPI";
+import { adicionarNovaCategoria, listarCategoria } from "../../../../api/categoriaAPI";
 import { categoriaActions } from "../../../../redux/reducers/categoriaReducer";
 import BotaoPrincipal from "../../../BotaoPrincipal";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const SobreposicaoModal = styled.div.attrs({
-  className: `fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 w-full h-full`,
-})``;
-
-const ContainerFormulario = styled.div.attrs({
-  className: `flex flex-col space-y-4 flex-1`,
+  className: `fixed 
+              inset-0 flex 
+              items-center 
+              justify-center 
+              z-50 bg-black 
+              bg-opacity-50`,
 })``;
 
 const ConteudoModal = styled.div.attrs({
-  className: `bg-white rounded-lg shadow-lg max-w-full sm:max-w-4xl w-full max-h-full overflow-auto relative p-6 text-black`,
+  className: `flex 
+              flex-col 
+              bg-white 
+              rounded-lg 
+              shadow-lg 
+              w-full 
+              max-w-lg 
+              p-6 
+              relative`,
 })``;
 
 const BotaoFechar = styled.button.attrs({
-  className: `absolute top-4 right-4 text-gray-500 hover:text-gray-700`,
+  className: `absolute 
+              top-4 
+              right-4 
+              text-gray-500 
+              hover:text-gray-700`,
 })``;
 
 const Formulario = styled.form.attrs({
-  className: `flex flex-col space-y-4`,
+  className: `flex 
+              flex-col 
+              space-y-4`,
 })``;
 
 const TituloModal = styled.h1.attrs({
-  className: `text-2xl mb-4 text-center`,
-})``;
-
-const Input = styled.input.attrs({
-  className: `flex flex-1 border p-2 rounded`,
+  className: `text-2xl 
+              mb-4 
+              text-center`,
 })``;
 
 const InputsContainer = styled.div.attrs({
-  className: `flex items-center space-x-4`,
+  className: `flex 
+              flex-col 
+              space-y-4`,
 })``;
 
 const InputGroup = styled.div.attrs({
-  className: `flex flex-col space-y-2`,
+  className: `flex 
+              items-center 
+              space-x-4`,
 })``;
 
-const Label = styled.span.attrs({})``;
+const Label = styled.label.attrs({
+  className: `w-32 
+              text-right 
+              font-medium`,
+})``;
 
-const Notificacao = styled.div.attrs({
-  className: `fixed top-4 right-4 bg-green-500 text-white p-4 rounded shadow-lg`,
+const Input = styled.input.attrs({
+  className: `border-2 
+              border-custom-blue 
+              p-2 rounded`,
+})``;
+
+
+const BotaoContainer = styled.div.attrs({
+  className: `flex 
+              justify-center 
+              mt-4`,
 })``;
 
 const AdicionarCategoria = ({ aberto, fechado }) => {
   const [novoId, setNovoId] = useState(null);
   const [nomeCategoria, setNomeCategoria] = useState("");
-  const [mensagemSucesso, setMensagemSucesso] = useState("");
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const fetchProximoId = async () => {
+    const fetchProximoCategoriaId = async () => {
       try {
         const categorias = await listarCategoria();
         const ultimoId = categorias.reduce(
@@ -76,7 +104,7 @@ const AdicionarCategoria = ({ aberto, fechado }) => {
     };
 
     if (aberto) {
-      fetchProximoId();
+      fetchProximoCategoriaId();
     }
   }, [aberto, dispatch]);
 
@@ -85,19 +113,26 @@ const AdicionarCategoria = ({ aberto, fechado }) => {
     if (nomeCategoria.trim() === "") return;
 
     try {
-      const novaCategoria = { idCategoria: novoId, DscTipoCategoria: nomeCategoria };
-      console.log("Nova categoria: ", novaCategoria);
+      const novaCategoria = {
+        idCategoria: novoId,
+        DscTipoCategoria: nomeCategoria,
+      };
       await adicionarNovaCategoria(novaCategoria);
+
       dispatch(categoriaActions.adicionarCategoriaReducer(novaCategoria));
-      setNomeCategoria(""); // Limpar o campo de input
-      setMensagemSucesso("Categoria cadastrada com sucesso!");
-      setTimeout(() => {
-        setMensagemSucesso(""); // Ocultar a mensagem após 3 segundos
-      }, 3000);
-      fechado(); // Fechar o modal
+
+      const categoriasAtualizadas = await listarCategoria();
+      dispatch(
+        categoriaActions.carregarCategoriasReducer(categoriasAtualizadas)
+      );
+
+      toast.success("Categoria cadastrada com sucesso!");
+
+      setNomeCategoria("");
+      fechado();
     } catch (error) {
       console.error("Erro ao adicionar uma nova categoria", error);
-      dispatch(categoriaActions.atualizarCategoriaReducer('Erro ao adicionar uma nova categoria', error.message));
+      toast.error("Erro ao adicionar uma nova categoria: " + error.message);
     }
   };
 
@@ -124,49 +159,42 @@ const AdicionarCategoria = ({ aberto, fechado }) => {
             </svg>
           </BotaoFechar>
           <Formulario onSubmit={handleSubmit} method="post">
-            <ContainerFormulario>
-              <TituloModal>Inserir Categoria</TituloModal>
-              <InputsContainer>
-                <InputGroup>
-                  <Label>ID</Label>
-                  <Input
-                    className="bg-gray-300"
-                    type="text"
-                    value={novoId}
-                    readOnly
-                    onChange={(e) => setNovoId(e.target.value)}
-                  />
-                </InputGroup>
-                <InputGroup className="flex-1">
-                  <Label>Categoria</Label>
-                  <Input
-                    type="text"
-                    value={nomeCategoria}
-                    onChange={(e) => setNomeCategoria(e.target.value)}
-                    placeholder="Nome da Categoria"
-                    required
-                  />
-                </InputGroup>
-              </InputsContainer>
+            <TituloModal>Inserir Categoria</TituloModal>
+            <InputsContainer>
+              <InputGroup>
+                <Label>ID da Categoria:</Label>
+                <Input
+                  className="bg-gray-300"
+                  type="text"
+                  value={novoId || ""}
+                  readOnly
+                />
+              </InputGroup>
+              <InputGroup>
+                <Label>Nome da Categoria:</Label>
+                <Input
+                  type="text"
+                  value={nomeCategoria}
+                  onChange={(e) => setNomeCategoria(e.target.value)}
+                  required
+                />
+              </InputGroup>
+              <BotaoContainer>
               <BotaoPrincipal
                 type="submit"
                 className="px-6 py-3 text-base font-medium"
-                
               >
                 Cadastrar
               </BotaoPrincipal>
-            </ContainerFormulario>
+              </BotaoContainer>
+             
+            </InputsContainer>
           </Formulario>
         </ConteudoModal>
       </SobreposicaoModal>
-      {mensagemSucesso && (
-        <Notificacao>{mensagemSucesso}</Notificacao>
-      )}
+      <ToastContainer />
     </>
   );
 };
 
 export default AdicionarCategoria;
-
-
-

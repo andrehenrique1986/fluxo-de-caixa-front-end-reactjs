@@ -7,6 +7,9 @@ import { listarSubcategoria } from "../../../../api/subcategoriaAPI";
 import styled from "styled-components";
 import BotaoPrincipal from "../../../BotaoPrincipal";
 import AdicionarCategoria from "../AdicionarCategoria";
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import AdicionarSubcategoria from "../../ModalSubcategoria/AdicionarSubcategoria";
 
 const Container = styled.div.attrs({
   className: `flex 
@@ -31,8 +34,13 @@ const Lista = styled.ul.attrs({
   className: `list-none 
                 p-0 
                 m-0 
-                text-black-800`,
-})``;
+                text-black-800 
+                border-2 
+                border-custom-blue
+                overflow-y-auto`,
+})`
+  max-height: 300px; 
+`;
 
 const DivErro = styled.div.attrs({
   className: `text-red-600 
@@ -40,23 +48,29 @@ const DivErro = styled.div.attrs({
 })``;
 
 const ContainerLista = styled.div.attrs({
-  className: `flex w-full justify-between space-x-1 bg-blue-200 `,
+  className: `flex 
+              w-full 
+              justify-between 
+              space-x-1 
+              bg-blue-200 
+              border-2 
+              border-custom-blue`,
 })``;
 
 const Item = ({ isSelected, children, ...props }) => {
   return (
     <li
       className={`py-2 
-                        px-4 
-                        cursor-pointer 
-                        border-0
-                ${
-                  isSelected
-                    ? "bg-blue-400 text-white"
-                    : "bg-gray-100 hover:bg-blue-400 hover:text-white"
-                }
-                ${!isSelected ? "text-black" : ""}
-            `}
+                    px-4 
+                    cursor-pointer 
+                    border-0
+            ${
+              isSelected
+                ? "bg-blue-400 text-white "
+                : "bg-gray-100 hover:bg-blue-400 hover:text-white"
+            }
+            ${!isSelected ? "text-black" : ""}
+        `}
       {...props}
     >
       {children}
@@ -66,8 +80,10 @@ const Item = ({ isSelected, children, ...props }) => {
 
 const ListaContainer = styled.div.attrs({
   className: `w-1/2 
-                p-4 flex 
-                flex-col`,
+                p-4 
+                flex 
+                flex-col
+                border-blue`,
 })``;
 
 const TituloLista = styled.h2.attrs({
@@ -82,7 +98,7 @@ const BotaoContainer = styled.div.attrs({
                 w-full 
                 justify-center 
                 space-x-4 
-                mt-4`,
+                `,
 })``;
 
 const ListaCategorias = () => {
@@ -92,11 +108,25 @@ const ListaCategorias = () => {
   const erroCategoria = useSelector((state) => state.categorias.error);
   const erroSubcategoria = useSelector((state) => state.subcategorias.error);
 
+  const [nomeCategoriaSelecionadaClick, setNomeCategoriaSelecionadaClick] = useState(null);
+
   const [categoriaSelecionada, setCategoriaSelecionada] = useState(null);
+  const [subCategoriaSelecionada, setSubCategoriaSelecionada] = useState(null);
   const [modalAdicionarCategoria, setModalAdicionarCategoria] = useState(false);
+  const [modalAdicionarSubcategoria, setModalAdicionarSubcategoria] = useState(false);
 
   const abrirAdicionarCategoria = () => setModalAdicionarCategoria(true);
   const fecharAdicionarCategoria = () => setModalAdicionarCategoria(false);
+
+  const abrirAdicionarSubcategoria = () => {
+    if (categoriaSelecionada) {
+      setModalAdicionarSubcategoria(true);
+    } else {
+      handleSemCategoria(); 
+    }
+  };
+  
+  const fecharAdicionarSubcategoria = () => setModalAdicionarSubcategoria(false);
 
   useEffect(() => {
     const fetchCategorias = async () => {
@@ -127,21 +157,61 @@ const ListaCategorias = () => {
       }
     };
 
+    setCategoriaSelecionada(categorias.categoriaSelecionada);
+
     fetchCategorias();
     fetchSubcategorias();
   }, [dispatch]);
 
+  const handleSuccessCategoria = (novaCategoria) => {
+    toast.success('Categoria cadastrada com sucesso!');
+    dispatch(categoriaActions.adicionarCategoriaReducer(novaCategoria));
+    setModalAdicionarCategoria(false);
+  };
+
+  const handleErrorCategoria = (erro) => {
+    toast.error('Erro ao cadastrar categoria: ' + erro.message);
+  };
+
+  const handleSuccessSubcategoria = (novaSubcategoria) => {
+    toast.success('Subcategoria cadastrada com sucesso!');
+    dispatch(subcategoriaActions.adicionarSubategoriaReducer(novaSubcategoria));
+    // Recarregar a lista de subcategorias
+    const fetchSubcategorias = async () => {
+      try {
+        const data = await listarSubcategoria();
+        dispatch(subcategoriaActions.carregarSubcategoriasReducer(data));
+      } catch (erro) {
+        console.error("Erro ao carregar subcategorias:", erro);
+        dispatch(
+          subcategoriaActions.erroSubcategoriaReducer(
+            "Erro ao carregar subcategorias: " + erro.message
+          )
+        );
+      }
+    };
+    fetchSubcategorias();
+    setModalAdicionarSubcategoria(false);
+  };
+
+  const handleErrorSubcategoria = (erro) => {
+    toast.error('Erro ao cadastrar subcategoria: ' + erro.message);
+  };
+
+  const handleSemCategoria = () => {
+    toast('Selecione uma categoria');
+  };
+
   if (erroCategoria) return <DivErro>{erroCategoria}</DivErro>;
   if (erroSubcategoria) return <DivErro>{erroSubcategoria}</DivErro>;
 
- 
-  const subcategoriasFiltradas = categoriaSelecionada
-    ? subcategorias.filter(subcategoria => subcategoria.nomeDaCategoria === categoriaSelecionada)
+  const subcategoriasFiltradas = categoriaSelecionada?.nomeDaCategoria
+    ? subcategorias.filter(subcategoria => subcategoria?.nomeDaCategoria === categoriaSelecionada?.nomeDaCategoria)
     : [];
 
   return (
     <Container>
-      <TituloModal>Lista Categorias e Subcategorias</TituloModal>
+      <TituloModal>Lista Categorias</TituloModal>
       <ContainerLista>
         <ListaContainer>
           <TituloLista>Categorias</TituloLista>
@@ -150,11 +220,14 @@ const ListaCategorias = () => {
               categorias.map((categoria) => (
                 <Item
                   key={categoria.id}
-                  isSelected={categoria.nomeDaCategoria === categoriaSelecionada}
-                  onClick={() => setCategoriaSelecionada(categoria.nomeDaCategoria)}
+                  isSelected={categoria?.nomeDaCategoria === nomeCategoriaSelecionadaClick}
+                  onClick={() => { 
+                    setCategoriaSelecionada(categoria);
+                    dispatch(categoriaActions.setCategoriaSelecionadaReducer(categoria));
+                    setNomeCategoriaSelecionadaClick(categoria.nomeDaCategoria)
+                    }}
                 >
                   {categoria.id} - {categoria.nomeDaCategoria}
-                  {(<AdicionarCategoria />)}
                 </Item>
               ))
             ) : (
@@ -169,6 +242,8 @@ const ListaCategorias = () => {
               subcategoriasFiltradas.map((subcategoria) => (
                 <Item
                   key={subcategoria.idDaSubcategoria}
+                  isSelected={subcategoria?.nomeDaSubcategoria === subCategoriaSelecionada?.nomeDaSubcategoria}
+                  onClick={() => setSubCategoriaSelecionada(subcategoria)}
                 >
                   {subcategoria.idDaSubcategoria} - {subcategoria.nomeDaSubcategoria}
                 </Item>
@@ -180,19 +255,39 @@ const ListaCategorias = () => {
         </ListaContainer>
       </ContainerLista>
       <BotaoContainer>
-        <BotaoPrincipal onClick={abrirAdicionarCategoria} className="w-1/2">
+        <BotaoPrincipal 
+          onClick={abrirAdicionarCategoria} 
+          className="w-1/2"
+        >
           Adicionar Categoria
         </BotaoPrincipal>
         <AdicionarCategoria
           aberto={modalAdicionarCategoria}
           fechado={fecharAdicionarCategoria}
+          onSuccess={handleSuccessCategoria}
+          onError={handleErrorCategoria}
         />
-        <BotaoPrincipal className="w-1/2">
+        <BotaoPrincipal 
+          onClick={abrirAdicionarSubcategoria} 
+          className="w-1/2"
+        >
           Adicionar Sub Categoria
         </BotaoPrincipal>
+        <AdicionarSubcategoria 
+          aberto={modalAdicionarSubcategoria}
+          fechado={fecharAdicionarSubcategoria}
+          onSuccess={handleSuccessSubcategoria}
+          onError={handleErrorSubcategoria}
+        />
       </BotaoContainer>
+      <ToastContainer />
     </Container>
   );
 };
 
 export default ListaCategorias;
+
+
+
+
+
