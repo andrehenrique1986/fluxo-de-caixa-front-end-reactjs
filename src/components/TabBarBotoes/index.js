@@ -36,6 +36,12 @@ const TabBarBotoes = () => {
   const abrirModalCategoria = () => setModalNovaCategoria(true);
   const fecharModalCategoria = () => setModalNovaCategoria(false);
 
+
+  const [modalNovaFormaDePagamento, setModalNovaFormaDePagamento] = useState(false);
+  const abrirModalFormaDePagamento = () => setModalNovaFormaDePagamento(true);
+  const fecharModalFormaDePagamento = () => setModalNovaFormaDePagamento(false);
+
+
   return (
     <Container>
       <ListaBotoes>
@@ -52,7 +58,11 @@ const TabBarBotoes = () => {
           />
         </ItemBotoes>
         <ItemBotoes>
-          <BotaoPrincipal>Forma Pagamento</BotaoPrincipal>
+          <BotaoPrincipal onClick={abrirModalFormaDePagamento}>Forma Pagamento</BotaoPrincipal>
+          <ModalFormaDePagamento 
+            aberto={modalNovaFormaDePagamento}
+            fechado={fecharModalFormaDePagamento}
+          />
         </ItemBotoes>
         <ItemBotoes>
           <BotaoPrincipal>Dashboard</BotaoPrincipal>

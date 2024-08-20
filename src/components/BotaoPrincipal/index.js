@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import tw from "twin.macro";
 
+
 const Botao = styled.button`
   ${tw`bg-custom-blue 
        text-white 
@@ -11,13 +12,17 @@ const Botao = styled.button`
        border-none 
        rounded-full 
        cursor-pointer 
-       hover:bg-custom-dark-blue flex justify-center mt-4`
-       }
+       flex 
+       justify-center 
+       mt-4`}
+  &:hover {
+    ${tw`bg-custom-dark-blue`}
+  }
 `;
-
 
 const BotaoPrincipal = ({children, onClick}) => {
   return <Botao onClick={onClick}>{children}</Botao>;
 };
 
 export default BotaoPrincipal;
+

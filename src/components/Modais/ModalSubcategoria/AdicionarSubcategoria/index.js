@@ -81,17 +81,13 @@ const Label = styled.label`
        }
 `;
 
-const Input = styled.input.attrs(props => ({
-  readOnly: props.readOnly
-}))`
+const Input = styled.input`
   ${tw`border-2 
-       border-blue-500 
+       border-custom-blue 
        p-2 
-       rounded-md`
+       rounded`
        }
-  background-color: ${props => (props.readOnly ? '#f3f4f6' : 'white')};
 `;
-
 const BotaoContainer = styled.div`
   ${tw`flex 
        justify-center 
@@ -138,13 +134,9 @@ const AdicionarSubcategoria = ({ aberto, fechado, onSuccess, onError }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!idCategoria || !nomeDaCategoria) {
-      toast.error("ID da categoria e Nome da categoria são obrigatórios e não podem ser nulos.");
-      return;
-    }
-
+  
     if (!nomeSubcategoria.trim()) {
-      toast.error("O nome da subcategoria é obrigatório.");
+      toast.warning("O nome da subcategoria é obrigatório.");
       return;
     }
 
@@ -157,7 +149,7 @@ const AdicionarSubcategoria = ({ aberto, fechado, onSuccess, onError }) => {
       };
       await adicionarNovaSubcategoria(novaSubcategoria);
 
-      // Atualizar a lista de subcategorias
+      
       const subcategoriasAtualizadas = await listarSubcategoria();
       dispatch(subcategoriaActions.carregarSubcategoriasReducer(subcategoriasAtualizadas));
 
@@ -167,7 +159,6 @@ const AdicionarSubcategoria = ({ aberto, fechado, onSuccess, onError }) => {
       fechado();
       if (onSuccess) onSuccess(novaSubcategoria);
     } catch (error) {
-      console.error("Erro ao adicionar uma nova subcategoria", error);
       toast.error(`Erro ao adicionar uma nova subcategoria: ${error.message}`);
       if (onError) onError(error);
     }
@@ -200,15 +191,15 @@ const AdicionarSubcategoria = ({ aberto, fechado, onSuccess, onError }) => {
             <InputsContainer>
               <InputGroup>
                 <Label>ID da Categoria: </Label>
-                <Input value={idCategoria || ""} readOnly />
+                <Input className="bg-gray-300" value={idCategoria || ""} readOnly />
               </InputGroup>
               <InputGroup>
                 <Label>Nome da Categoria: </Label>
-                <Input value={nomeDaCategoria || ""} readOnly />
+                <Input className="bg-gray-300" value={nomeDaCategoria || ""} readOnly />
               </InputGroup>
               <InputGroup>
                 <Label>ID da Subcategoria: </Label>
-                <Input value={idSubcategoria || ""} readOnly />
+                <Input className="bg-gray-300" value={idSubcategoria || ""} readOnly />
               </InputGroup>
               <InputGroup>
                 <Label>Nome da Subcategoria: </Label>

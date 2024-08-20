@@ -8,40 +8,46 @@ import BotaoPrincipal from "../../../BotaoPrincipal";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const SobreposicaoModal = styled.div.attrs({
-  className: `fixed 
-              inset-0 flex 
-              items-center 
-              justify-center 
-              z-50 bg-black 
-              bg-opacity-50`,
-})``;
+const SobreposicaoModal = styled.div`
+  ${tw`fixed 
+       inset-0 
+       flex        
+       items-center 
+      justify-center      
+      z-50 
+      bg-black 
+      bg-opacity-50`
+      }
+`;
 
-const ConteudoModal = styled.div.attrs({
-  className: `flex 
-              flex-col 
-              bg-white 
-              rounded-lg 
-              shadow-lg 
-              w-full 
-              max-w-lg 
-              p-6 
-              relative`,
-})``;
+const ConteudoModal = styled.div`
+  ${tw`flex 
+       flex-col 
+       bg-white 
+       rounded-lg 
+       shadow-lg 
+       w-full 
+       max-w-lg 
+       p-6 
+       relative`
+       }
+`;
 
-const BotaoFechar = styled.button.attrs({
-  className: `absolute 
-              top-4 
-              right-4 
-              text-gray-500 
-              hover:text-gray-700`,
-})``;
+const BotaoFechar = styled.button`
+  ${tw`absolute 
+       top-4 
+       right-4 
+       text-gray-500 
+       hover:text-gray-700`
+       }
+`;
 
-const Formulario = styled.form.attrs({
-  className: `flex 
-              flex-col 
-              space-y-4`,
-})``;
+const Formulario = styled.form`
+  ${tw`flex 
+       flex-col 
+       space-y-4`
+       }
+`;
 
 const TituloModal = styled.h1.attrs({
   className: `text-2xl 
@@ -67,11 +73,14 @@ const Label = styled.label.attrs({
               font-medium`,
 })``;
 
-const Input = styled.input.attrs({
-  className: `border-2 
-              border-custom-blue 
-              p-2 rounded`,
-})``;
+const Input = styled.input`
+  ${tw`border-2 
+       border-custom-blue 
+       p-2 
+       rounded`
+       }
+`;
+
 
 
 const BotaoContainer = styled.div.attrs({
@@ -111,7 +120,11 @@ const AdicionarCategoria = ({ aberto, fechado }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (nomeCategoria.trim() === "") return;
+    if (!nomeCategoria.trim()) {
+      toast.error("O nome da categoria é obrigatório.");
+      return;
+    }
+
 
     try {
       const novaCategoria = {
@@ -132,7 +145,6 @@ const AdicionarCategoria = ({ aberto, fechado }) => {
       setNomeCategoria("");
       fechado();
     } catch (error) {
-      console.error("Erro ao adicionar uma nova categoria", error);
       toast.error("Erro ao adicionar uma nova categoria: " + error.message);
     }
   };
@@ -174,10 +186,10 @@ const AdicionarCategoria = ({ aberto, fechado }) => {
               <InputGroup>
                 <Label>Nome da Categoria:</Label>
                 <Input
+                  placeholder="Nome da categoria"
                   type="text"
                   value={nomeCategoria}
                   onChange={(e) => setNomeCategoria(e.target.value)}
-                  required
                 />
               </InputGroup>
               <BotaoContainer>

@@ -7,7 +7,7 @@ import rootReducer from './index';
 const persistConfig = {
   key: 'root',
   storage,
-  whitelist: ['categorias', 'subcategorias'] 
+  whitelist: ['categorias', 'subcategorias', 'formasDePagamento'] 
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
