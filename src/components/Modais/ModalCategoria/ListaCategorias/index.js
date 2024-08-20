@@ -5,101 +5,106 @@ import { subcategoriaActions } from "../../../../redux/reducers/subcategoriaRedu
 import { listarCategoria } from "../../../../api/categoriaAPI";
 import { listarSubcategoria } from "../../../../api/subcategoriaAPI";
 import styled from "styled-components";
+import tw from "twin.macro";
 import BotaoPrincipal from "../../../BotaoPrincipal";
 import AdicionarCategoria from "../AdicionarCategoria";
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import AdicionarSubcategoria from "../../ModalSubcategoria/AdicionarSubcategoria";
+import AdicionarSubcategoria from "../../ModalSubcategoria/AdicionarSubcategoria/index.js";
 
-const Container = styled.div.attrs({
-  className: `flex 
-                flex-col 
-                p-0
-                bg-white 
-                rounded-lg 
-                shadow-md
-                items-center
-                text-black
-                w-96
-                h-100
-                size-fit
-                `,
-})``;
-
-const TituloModal = styled.h1.attrs({
-  className: `text-2xl mb-4 text-center`,
-})``;
-
-const Lista = styled.ul.attrs({
-  className: `list-none 
-                p-0 
-                m-0 
-                text-black-800 
-                border-2 
-                border-custom-blue
-                overflow-y-auto`,
-})`
-  max-height: 300px; 
+const Container = styled.div`
+  ${tw`flex 
+       flex-col 
+       p-0 
+       bg-white 
+       rounded-lg 
+       shadow-md 
+       items-center 
+       text-black 
+       w-96 
+       h-auto`
+       }
 `;
 
-const DivErro = styled.div.attrs({
-  className: `text-red-600 
-                font-bold`,
-})``;
+const TituloModal = styled.h1`
+    ${tw`text-2xl 
+    mb-4 
+    text-center`
+    }
+  `;
 
-const ContainerLista = styled.div.attrs({
-  className: `flex 
-              w-full 
-              justify-between 
-              space-x-1 
-              bg-blue-200 
-              border-2 
-              border-custom-blue`,
-})``;
+const Lista = styled.ul`
+    ${tw`list-none 
+        p-0 
+        m-0 
+        text-black
+        border-2 
+        border-custom-blue 
+        overflow-y-auto`
+        }
+    max-height: 300px;
+  `;
 
-const Item = ({ isSelected, children, ...props }) => {
-  return (
-    <li
-      className={`py-2 
-                    px-4 
-                    cursor-pointer 
-                    border-0
-            ${
-              isSelected
-                ? "bg-blue-400 text-white "
-                : "bg-gray-100 hover:bg-blue-400 hover:text-white"
-            }
-            ${!isSelected ? "text-black" : ""}
-        `}
-      {...props}
-    >
-      {children}
-    </li>
-  );
-};
 
-const ListaContainer = styled.div.attrs({
-  className: `w-1/2 
-                p-4 
-                flex 
-                flex-col
-                border-blue`,
-})``;
+const DivErro = styled.div`
+  ${tw`text-red-600 
+       font-bold
+       `
+       }
+`;
 
-const TituloLista = styled.h2.attrs({
-  className: `text-center 
-                text-lg 
-                font-bold 
-                mb-2`,
-})``;
+const ContainerLista = styled.div`
+  ${tw`flex 
+       w-full 
+       justify-between 
+       space-x-1 
+       bg-blue-200 
+       border-2 
+       border-custom-blue`
+       }
+`;
 
-const BotaoContainer = styled.div.attrs({
-  className: `flex 
-                w-full 
-                justify-center 
-                space-x-4 
-                `,
-})``;
+
+const Item = styled.li`
+  ${tw`py-2 
+       px-4 
+       cursor-pointer 
+       border-0`
+       }
+  ${({ isSelected }) => isSelected ? 
+                                   tw`bg-blue-400 
+                                      text-white` 
+                                    :
+                                    tw`bg-gray-100 
+                                       hover:bg-blue-400 
+                                       hover:text-white`}
+  ${({ isSelected }) => !isSelected && tw`text-black`}
+`;
+
+
+const ListaContainer = styled.div`
+  ${tw`w-1/2 
+       p-4 
+       flex 
+       flex-col 
+       border 
+       border-blue-500`
+       }
+`;
+
+const TituloLista = styled.h2`
+  ${tw`text-center 
+       text-lg 
+       font-bold 
+       mb-2`
+       }
+`;
+
+// Container para Botões
+const BotaoContainer = styled.div`
+  ${tw`flex w-full justify-center space-x-4`}
+`;
+
 
 const ListaCategorias = () => {
   const dispatch = useDispatch();

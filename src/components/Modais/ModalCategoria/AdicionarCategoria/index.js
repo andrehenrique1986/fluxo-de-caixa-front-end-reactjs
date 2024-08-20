@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
+import tw from "twin.macro";
 import { adicionarNovaCategoria, listarCategoria } from "../../../../api/categoriaAPI";
 import { categoriaActions } from "../../../../redux/reducers/categoriaReducer";
 import BotaoPrincipal from "../../../BotaoPrincipal";

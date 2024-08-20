@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import BotaoPrincipal from "../BotaoPrincipal";
 import ModalCategoria from "../Modais/ModalCategoria";
+import ModalFormaDePagamento from "../Modais/ModalFormaDePagamento";
 
 const Container = styled.div.attrs({
   className: `bg-[#a1c082] 

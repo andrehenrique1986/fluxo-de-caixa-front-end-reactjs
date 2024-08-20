@@ -1,35 +1,62 @@
 import React from 'react';
 import styled from 'styled-components';
+import tw from 'twin.macro';
 import BotaoPrincipal from '../BotaoPrincipal';
 
 
-const Container = styled.div.attrs({
-  className: 'flex flex-col gap-4 mt-1 p-4',
-})``;
+const Container = styled.div`
+  ${tw`flex 
+       flex-col 
+       gap-4 
+       mt-1 
+       p-4`
+       }
+`;
 
-const InputsEBotaoContainer = styled.div.attrs({
-  className: 'flex flex-wrap items-center gap-2',
-})``;
+const InputsEBotaoContainer = styled.div`
+  ${tw`flex 
+       flex-wrap 
+       items-center 
+       gap-2`
+       }
+`;
 
-const Texto = styled.span.attrs({
-  className: 'text-black font-bold',
-})``;
+const Texto = styled.span`
+  ${tw`text-black 
+       font-bold`
+       }
+`;
 
-const InputData = styled.input.attrs({
-  className: 'text-black m-1 p-2 border-gray-300 border-black rounded w-full sm:w-auto',
-})``;
+const InputData = styled.input`
+  ${tw`text-black 
+       m-1 
+       p-2 
+       border-gray-300 
+       border-black 
+       rounded 
+       w-full 
+       sm:w-auto`
+       }
+`;
+ 
+const DivInputs = styled.div`
+  ${tw`flex 
+       flex-wrap 
+      items-center 
+      gap-2 
+      w-full`
+      }
+`;
 
-const DivInputs = styled.div.attrs({
-  className: 'flex flex-wrap items-center gap-2 w-full',
-})``;
+const DivBotao = styled.div`
+  ${tw`w-auto`}
+`;
 
-const DivBotao = styled.div.attrs({
-  className: 'w-auto'
-})``;
 
-const Espaco = styled.div.attrs({
-  className: 'flex-1'
-})``;
+const Espaco = styled.div`
+  ${tw`flex-1`}
+`;
+ 
 
 const InputsDatas = () => {
   //const [modalNovoRegistro, setModalNovoRegistro] = useState(false);

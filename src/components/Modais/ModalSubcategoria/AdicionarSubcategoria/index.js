@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
+import tw from "twin.macro";
 import { subcategoriaActions } from "../../../../redux/reducers/subcategoriaReducer";
 import { adicionarNovaSubcategoria, listarSubcategoria } from "../../../../api/subcategoriaAPI";
 import BotaoPrincipal from "../../../BotaoPrincipal";
@@ -8,52 +9,103 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 
-const SobreposicaoModal = styled.div.attrs({
-  className: `fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50`,
-})``;
+const SobreposicaoModal = styled.div`
+  ${tw`fixed 
+       inset-0 
+       flex 
+       items-center 
+       justify-center 
+       z-50 
+       bg-black 
+       bg-opacity-50`
+       }
+`;
+  
 
-const ConteudoModal = styled.div.attrs({
-  className: `flex flex-col bg-white rounded-lg shadow-lg w-full max-w-lg p-6 relative`,
-})``;
+const ConteudoModal = styled.div`
+  ${tw`flex 
+       flex-col 
+       bg-white 
+       rounded-lg 
+       shadow-lg 
+       w-full 
+       max-w-2xl 
+       p-6 
+       relative`
+       }
+`;
 
-const BotaoFechar = styled.button.attrs({
-  className: `absolute top-4 right-4 text-gray-500 hover:text-gray-700`,
-})``;
+const BotaoFechar = styled.button`
+  ${tw`absolute 
+       top-4 
+       right-4 
+       text-gray-500 
+       hover:text-gray-700`
+       }
+`;
 
-const Formulario = styled.form.attrs({
-  className: `flex-col space-y-4`,
-})``;
+const Formulario = styled.form`
+  ${tw`flex 
+       flex-col 
+       gap-4`
+       }
+`;
 
-const TituloModal = styled.h1.attrs({
-  className: `text-2xl mb-4 text-center`,
-})``;
 
-const InputsContainer = styled.div.attrs({
-  className: `flex flex-col space-y-4`,
-})``;
+const TituloModal = styled.h1`
+  ${tw`text-2xl 
+       mb-4 
+       text-center`
+       }
+`;
 
-const InputGroup = styled.div.attrs({
-  className: `flex items-center space-x-4`,
-})``;
+const InputsContainer = styled.div`
+  ${tw`flex 
+       flex-col 
+       gap-4`
+       }
+`;
 
-const Label = styled.label.attrs({
-  className: `w-32 text-right font-medium`,
-})``;
+const InputGroup = styled.div`
+  ${tw`flex 
+       items-center 
+       gap-4`
+       }
+`;
 
-const Input = styled.input.attrs({
-  className: `border-2 border-custom-blue p-2 rounded`,
-})``;
 
-const BotaoContainer = styled.div.attrs({
-  className: `flex justify-center mt-4`,
-})``;
+const Label = styled.label`
+  ${tw`w-32 
+       font-medium 
+       text-right`
+       }
+`;
+
+const Input = styled.input.attrs(props => ({
+  readOnly: props.readOnly
+}))`
+  ${tw`border-2 
+       border-blue-500 
+       p-2 
+       rounded-md`
+       }
+  background-color: ${props => (props.readOnly ? '#f3f4f6' : 'white')};
+`;
+
+const BotaoContainer = styled.div`
+  ${tw`flex 
+       justify-center 
+       mt-4`
+       }
+`;
+
 
 const AdicionarSubcategoria = ({ aberto, fechado, onSuccess, onError }) => {
   const dispatch = useDispatch();
   const categoriaSelecionada = useSelector(state => state.categorias.categoriaSelecionada);
-  
+
   const [idCategoria, setIdCategoria] = useState(null);
-  const [nomeCategoria, setNomeCategoria] = useState('');
+  const [nomeDaCategoria, setNomeDaCategoria] = useState('');
   const [nomeSubcategoria, setNomeSubcategoria] = useState("");
   const [idSubcategoria, setIdSubcategoria] = useState(null);
 
@@ -68,46 +120,44 @@ const AdicionarSubcategoria = ({ aberto, fechado, onSuccess, onError }) => {
         setIdSubcategoria(ultimoId + 1);
       } catch (error) {
         console.error("Erro ao obter subcategorias", error);
-        dispatch(subcategoriaActions.erroSubcategoriaReducer("Erro ao obter subcategorias: " + error.message));
+        dispatch(subcategoriaActions.erroSubcategoriaReducer(`Erro ao obter subcategorias: ${error.message}`));
       }
     };
 
     if (aberto) {
       if (categoriaSelecionada) {
         setIdCategoria(categoriaSelecionada.id);
-        setNomeCategoria(categoriaSelecionada.nomeDaCategoria || ''); // Garantir que nomeCategoria não seja nulo
+        setNomeDaCategoria(categoriaSelecionada.nomeDaCategoria || '');
+        fetchProximoSubcategoriaId();
       } else {
         toast.error("Categoria selecionada é inválida ou não foi definida.");
-        return;
       }
-
-      fetchProximoSubcategoriaId();
     }
   }, [aberto, categoriaSelecionada, dispatch]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!idCategoria || !nomeCategoria) {
+    if (!idCategoria || !nomeDaCategoria) {
       toast.error("ID da categoria e Nome da categoria são obrigatórios e não podem ser nulos.");
       return;
     }
 
     if (!nomeSubcategoria.trim()) {
-      toast.error("O nome da subcategoria é obrigatório");
+      toast.error("O nome da subcategoria é obrigatório.");
       return;
     }
 
     try {
       const novaSubcategoria = {
         IdCategoria: idCategoria,
-        DscTipoCategoria: nomeCategoria,
+        DscTipoCategoria: nomeDaCategoria,
         DscTipoSubcategoria: nomeSubcategoria,
         IdDaSubcategoria: idSubcategoria
       };
       await adicionarNovaSubcategoria(novaSubcategoria);
 
-      
+      // Atualizar a lista de subcategorias
       const subcategoriasAtualizadas = await listarSubcategoria();
       dispatch(subcategoriaActions.carregarSubcategoriasReducer(subcategoriasAtualizadas));
 
@@ -115,11 +165,11 @@ const AdicionarSubcategoria = ({ aberto, fechado, onSuccess, onError }) => {
 
       setNomeSubcategoria("");
       fechado();
-      if (onSuccess) onSuccess(novaSubcategoria); 
+      if (onSuccess) onSuccess(novaSubcategoria);
     } catch (error) {
       console.error("Erro ao adicionar uma nova subcategoria", error);
-      toast.error("Erro ao adicionar uma nova subcategoria: " + error.message);
-      if (onError) onError(error); 
+      toast.error(`Erro ao adicionar uma nova subcategoria: ${error.message}`);
+      if (onError) onError(error);
     }
   };
 
@@ -150,15 +200,15 @@ const AdicionarSubcategoria = ({ aberto, fechado, onSuccess, onError }) => {
             <InputsContainer>
               <InputGroup>
                 <Label>ID da Categoria: </Label>
-                <Input className="bg-gray-300" value={idCategoria || ""} readOnly />
+                <Input value={idCategoria || ""} readOnly />
               </InputGroup>
               <InputGroup>
                 <Label>Nome da Categoria: </Label>
-                <Input className="bg-gray-300" value={nomeCategoria || ""} readOnly />
+                <Input value={nomeDaCategoria || ""} readOnly />
               </InputGroup>
               <InputGroup>
                 <Label>ID da Subcategoria: </Label>
-                <Input className="bg-gray-300" value={idSubcategoria || ""} readOnly />
+                <Input value={idSubcategoria || ""} readOnly />
               </InputGroup>
               <InputGroup>
                 <Label>Nome da Subcategoria: </Label>
@@ -170,7 +220,7 @@ const AdicionarSubcategoria = ({ aberto, fechado, onSuccess, onError }) => {
               </InputGroup>
             </InputsContainer>
             <BotaoContainer>
-              <BotaoPrincipal className="px-6 py-3 text-base font-medium" type="submit">
+              <BotaoPrincipal type="submit">
                 Cadastrar
               </BotaoPrincipal>
             </BotaoContainer>
@@ -183,11 +233,4 @@ const AdicionarSubcategoria = ({ aberto, fechado, onSuccess, onError }) => {
 };
 
 export default AdicionarSubcategoria;
-
-
-
-
-
-
-
 

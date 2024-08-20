@@ -1,12 +1,13 @@
 import React from "react";
 import styled from "styled-components";
+import tw from "twin.macro";
 
-const Rodape = styled.footer.attrs({
-    className: `bg-center 
-                bg-[#80ae51] 
-                mt-1`
-})``;
-
+const Rodape = styled.footer`
+    ${tw`bg-center 
+         bg-[#80ae51] 
+         mt-1`
+         }
+`
 const Footer = () => {
     return(
         <Rodape>
