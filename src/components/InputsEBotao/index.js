@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import tw from "twin.macro";
-import InputsDatas from "../IpnutsDatas";
+import InputsDatas from "../InputsDatas";
 
 const Container = styled.div`
   ${tw`flex 

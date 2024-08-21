@@ -11,6 +11,8 @@ import AdicionarCategoria from "../AdicionarCategoria";
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import AdicionarSubcategoria from "../../ModalSubcategoria/AdicionarSubcategoria/index.js";
+import AtualizarCategoria from "../AtualizarCategoria/index.js";
+import ExcluirCategoria from "../ExcluirCategoria/index.js";
 
 const Container = styled.div`
   ${tw`flex 
@@ -103,25 +105,33 @@ const BotaoContainer = styled.div`
 
 const ListaCategorias = () => {
   const dispatch = useDispatch();
-  const categorias = useSelector(state => state.categorias.categorias);
-  const subcategorias = useSelector(state => state.subcategorias.subcategorias);
-  const erroCategoria = useSelector((state) => state.categorias.error);
-  const erroSubcategoria = useSelector((state) => state.subcategorias.error);
+  const categorias = useSelector(state => state.categorias.categorias) || [];
+  const subcategorias = useSelector(state => state.subcategorias.subcategorias) || [];
+  const erroCategoria = useSelector(state => state.categorias.error);
+  const erroSubcategoria = useSelector(state => state.subcategorias.error);
 
   const [nomeCategoriaSelecionadaClick, setNomeCategoriaSelecionadaClick] = useState(null);
   const [categoriaSelecionada, setCategoriaSelecionada] = useState(null);
   const [subCategoriaSelecionada, setSubCategoriaSelecionada] = useState(null);
   const [modalAdicionarCategoria, setModalAdicionarCategoria] = useState(false);
+  const [modalAtualizarCategoria, setModalAtualizarCategoria] = useState(false);
+  const [modalExcluirCategoria, setModalExcluirCategoria] = useState(false);
   const [modalAdicionarSubcategoria, setModalAdicionarSubcategoria] = useState(false);
 
   const abrirAdicionarCategoria = () => setModalAdicionarCategoria(true);
   const fecharAdicionarCategoria = () => setModalAdicionarCategoria(false);
 
+  const abrirAtualizarCategoria = () => setModalAtualizarCategoria(true);
+  const fecharAtualizarCategoria = () => setModalAtualizarCategoria(false);
+
+  const abrirExcluirCategoria = () => setModalExcluirCategoria(true);
+  const fecharExcluirCategoria = () => setModalExcluirCategoria(false);
+
   const abrirAdicionarSubcategoria = () => {
     if (categoriaSelecionada) {
       setModalAdicionarSubcategoria(true);
     } else {
-      handleSemCategoria(); 
+      handleSemCategoria();
     }
   };
 
@@ -134,11 +144,7 @@ const ListaCategorias = () => {
         dispatch(categoriaActions.carregarCategoriasReducer(data));
       } catch (erro) {
         console.error("Erro ao carregar categorias:", erro);
-        dispatch(
-          categoriaActions.erroCategoriaReducer(
-            "Erro ao carregar categorias: " + erro.message
-          )
-        );
+        dispatch(categoriaActions.erroCategoriaReducer("Erro ao carregar categorias: " + erro.message));
       }
     };
 
@@ -148,47 +154,45 @@ const ListaCategorias = () => {
         dispatch(subcategoriaActions.carregarSubcategoriasReducer(data));
       } catch (erro) {
         console.error("Erro ao carregar subcategorias:", erro);
-        dispatch(
-          subcategoriaActions.erroSubcategoriaReducer(
-            "Erro ao carregar subcategorias: " + erro.message
-          )
-        );
+        dispatch(subcategoriaActions.erroSubcategoriaReducer("Erro ao carregar subcategorias: " + erro.message));
       }
     };
-
-    setCategoriaSelecionada(categorias.categoriaSelecionada);
 
     fetchCategorias();
     fetchSubcategorias();
   }, [dispatch]);
 
-  const handleSuccessCategoria = (novaCategoria) => {
+  const handleSuccessNovaCategoria = (novaCategoria) => {
     toast.success('Categoria cadastrada com sucesso!');
     dispatch(categoriaActions.adicionarCategoriaReducer(novaCategoria));
     setModalAdicionarCategoria(false);
   };
 
-  const handleErrorCategoria = (erro) => {
+  const handleSuccessAtualizarCategoria = (categoria, categoriaAtualizada) => {
+    if (categoriaAtualizada) {
+      dispatch(categoriaActions.atualizarCategoriaReducer(categoria));
+      toast.success('Categoria atualizada com sucesso!');
+    }
+    setModalAtualizarCategoria(false);
+  };
+
+  const handleErrorAdicionarCategoria = (erro) => {
     toast.error('Erro ao cadastrar categoria: ' + erro.message);
   };
 
-  const handleSuccessSubcategoria = (novaSubcategoria) => {
-    toast.success('Subcategoria cadastrada com sucesso!');
-    dispatch(subcategoriaActions.adicionarSubategoriaReducer(novaSubcategoria));
-    const fetchSubcategorias = async () => {
-      try {
-        const data = await listarSubcategoria();
-        dispatch(subcategoriaActions.carregarSubcategoriasReducer(data));
-      } catch (erro) {
-        console.error("Erro ao carregar subcategorias:", erro);
-        dispatch(
-          subcategoriaActions.erroSubcategoriaReducer(
-            "Erro ao carregar subcategorias: " + erro.message
-          )
-        );
-      }
-    };
-    fetchSubcategorias();
+  const handleErrorAtualizarCategoria = (erro) => {
+    toast.error('Erro ao atualizar categoria: ' + erro.message);
+  };
+
+  const handleErrorExcluirCategoria = (erro) => {
+    toast.error('Erro ao excluir categoria: ' + erro.message);
+  };
+
+  const handleSuccessSubcategoria = (novaSubcategoria, subcategoriaAtualizada) => {
+    if(subcategoriaAtualizada){
+      dispatch(subcategoriaActions.adicionarSubategoriaReducer(novaSubcategoria));
+      toast.success('Subcategoria cadastrada com sucesso!');
+    }
     setModalAdicionarSubcategoria(false);
   };
 
@@ -257,10 +261,22 @@ const ListaCategorias = () => {
           <BotaoPrincipal onClick={abrirAdicionarCategoria}>
             Adicionar Categoria
           </BotaoPrincipal>
-          <BotaoPrincipal>
+          <BotaoPrincipal onClick={() =>{
+            if (categoriaSelecionada) {
+              abrirAtualizarCategoria();
+            } else {
+              handleSemCategoria();
+            }
+          }}>
             Atualizar Categoria
           </BotaoPrincipal>
-          <BotaoPrincipal>
+          <BotaoPrincipal onClick={() => {
+            if (categoriaSelecionada) {
+              abrirExcluirCategoria();
+            } else {
+              handleSemCategoria();
+            }
+          }}>
             Excluir Categoria
           </BotaoPrincipal>
         </BotaoContainer>
@@ -279,8 +295,22 @@ const ListaCategorias = () => {
       <AdicionarCategoria
         aberto={modalAdicionarCategoria}
         fechado={fecharAdicionarCategoria}
-        onSuccess={handleSuccessCategoria}
-        onError={handleErrorCategoria}
+        onSuccess={handleSuccessNovaCategoria}
+        onError={handleErrorAdicionarCategoria}
+      />
+      <AtualizarCategoria 
+        aberto={modalAtualizarCategoria}
+        fechado={fecharAtualizarCategoria}
+        onSuccess={handleSuccessAtualizarCategoria}
+        onError={handleErrorAtualizarCategoria}
+        categoriaId={categoriaSelecionada?.id}
+        nomeCategoriaSelecionadaClick={categoriaSelecionada?.nomeDaCategoria}
+      />
+      <ExcluirCategoria 
+        aberto={modalExcluirCategoria}
+        fechado={fecharExcluirCategoria}
+        categoriaId={categoriaSelecionada?.id}
+        nomeCategoriaSelecionadaClick={categoriaSelecionada?.nomeDaCategoria}
       />
       <AdicionarSubcategoria 
         aberto={modalAdicionarSubcategoria}
@@ -294,6 +324,7 @@ const ListaCategorias = () => {
 };
 
 export default ListaCategorias;
+
 
 
 

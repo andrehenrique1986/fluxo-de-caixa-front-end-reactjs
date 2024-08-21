@@ -10,10 +10,7 @@ const TypesCategoria = {
 };
 
 const initialState = {
-  categorias: [{
-    idCategoria: 0,
-    dscCategoria: ''
-  }],
+  categorias: [],
   nomeSubcategorias: [],
   categoriaPorId: null,
   error: null,
@@ -46,10 +43,10 @@ const categoriaReducer = (state = initialState, action) => {
       return {
         ...state,
         categorias: state.categorias.map((categoria) =>
-          categoria.id === action.payload.id ? action.payload : categoria
+          categoria.idCategoria === action.payload.idCategoria ? action.payload : categoria
         ),
         categoriaPorId:
-          state.categoriaPorId && state.categoriaPorId.id === action.payload.id
+          state.categoriaPorId && state.categoriaPorId.idCategoria === action.payload.id
             ? action.payload
             : state.categoriaPorId,
       };
@@ -62,10 +59,10 @@ const categoriaReducer = (state = initialState, action) => {
       return {
         ...state,
         categorias: state.categorias.filter(
-          (categoria) => categoria.id !== action.payload
+          (categoria) => categoria.idCategoria !== action.payload
         ),
         categoriaPorId:
-          state.categoriaPorId && state.categoriaPorId.id === action.payload
+          state.categoriaPorId && state.categoriaPorId.idCategoria === action.payload
             ? null
             : state.categoriaPorId,
       };

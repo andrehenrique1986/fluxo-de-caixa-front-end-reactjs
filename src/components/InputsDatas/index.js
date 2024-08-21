@@ -11,13 +11,30 @@ const Container = styled.div`
        mt-1 
        p-4`
        }
+  ${tw`md:gap-6 
+       md:flex-row 
+       md:items-start`
+       }
 `;
 
 const InputsEBotaoContainer = styled.div`
   ${tw`flex 
-       flex-wrap 
+       flex-col 
+       gap-4 
+       w-full`
+       }
+  ${tw`md:flex-row 
+       md:gap-6 md:w-full`
+       }
+`;
+
+const InputsAndButtonsContainer = styled.div`
+  ${tw`flex 
+       flex-col 
+       md:flex-row 
        items-center 
-       gap-2`
+       gap-4 
+       md:gap-6 w-full`
        }
 `;
 
@@ -25,64 +42,49 @@ const Texto = styled.span`
   ${tw`text-black 
        font-bold`
        }
+  ${tw`md:text-base`}
 `;
 
 const InputData = styled.input`
   ${tw`text-black 
-       m-1 
        p-2 
        border-gray-300 
-       border-black 
+       border 
        rounded 
-       w-full 
-       sm:w-auto`
+       w-full`
        }
+  ${tw`sm:w-auto`}
+  ${tw`md:w-48`} 
 `;
- 
-const DivInputs = styled.div`
+
+const ButtonsContainer = styled.div`
   ${tw`flex 
-       flex-wrap 
-      items-center 
-      gap-2 
-      w-full`
-      }
+       gap-4 
+       items-center`
+       }
+  ${tw`md:ml-4`}
 `;
-
-const DivBotao = styled.div`
-  ${tw`w-auto`}
-`;
-
-
-const Espaco = styled.div`
-  ${tw`flex-1`}
-`;
- 
 
 const InputsDatas = () => {
-  //const [modalNovoRegistro, setModalNovoRegistro] = useState(false);
-
-
-  //const abrirModalRegistro = () => setModalNovoRegistro(true);
-  //const fecharModalRegistro = () => setModalNovoRegistro(false);
-
   return (
     <Container>
       <InputsEBotaoContainer>
-        <DivInputs>
+        <InputsAndButtonsContainer>
           <Texto>Data Inicial:</Texto>
           <InputData type="date" />
           <Texto>Data Final:</Texto>
           <InputData type="date" />
-          <BotaoPrincipal>Buscar</BotaoPrincipal>
-          <Espaco />
-          <DivBotao>
+          <ButtonsContainer>
+            <BotaoPrincipal>Buscar</BotaoPrincipal>
             <BotaoPrincipal>Novo Registro</BotaoPrincipal>
-          </DivBotao>
-        </DivInputs>
+          </ButtonsContainer>
+        </InputsAndButtonsContainer>
       </InputsEBotaoContainer>
     </Container>
   );
 };
 
 export default InputsDatas;
+
+
 

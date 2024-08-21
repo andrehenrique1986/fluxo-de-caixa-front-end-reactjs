@@ -3,21 +3,23 @@ import { useDispatch } from "react-redux";
 import styled from "styled-components";
 import tw from "twin.macro";
 import { adicionarNovaCategoria, listarCategoria } from "../../../../api/categoriaAPI";
+import { listarSubcategoria } from "../../../../api/subcategoriaAPI";
 import { categoriaActions } from "../../../../redux/reducers/categoriaReducer";
 import BotaoPrincipal from "../../../BotaoPrincipal";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { subcategoriaActions } from "../../../../redux/reducers/subcategoriaReducer";
 
 const SobreposicaoModal = styled.div`
   ${tw`fixed 
        inset-0 
-       flex        
+       flex 
        items-center 
-      justify-center      
-      z-50 
-      bg-black 
-      bg-opacity-50`
-      }
+       justify-center 
+       z-50 
+       bg-black 
+       bg-opacity-50`
+       }
 `;
 
 const ConteudoModal = styled.div`
@@ -49,29 +51,33 @@ const Formulario = styled.form`
        }
 `;
 
-const TituloModal = styled.h1.attrs({
-  className: `text-2xl 
-              mb-4 
-              text-center`,
-})``;
+const TituloModal = styled.h1`
+  ${tw`text-2xl 
+       mb-4 
+       text-center`
+       }
+`;
 
-const InputsContainer = styled.div.attrs({
-  className: `flex 
-              flex-col 
-              space-y-4`,
-})``;
+const InputsContainer = styled.div`
+  ${tw`flex 
+       flex-col 
+       space-y-4`
+       }
+`;
 
-const InputGroup = styled.div.attrs({
-  className: `flex 
-              items-center 
-              space-x-4`,
-})``;
+const InputGroup = styled.div`
+  ${tw`flex 
+       items-center 
+       space-x-4`
+       }
+`;
 
-const Label = styled.label.attrs({
-  className: `w-32 
-              text-right 
-              font-medium`,
-})``;
+const Label = styled.label`
+  ${tw`w-32 
+       text-right 
+       font-medium`
+       }
+`;
 
 const Input = styled.input`
   ${tw`border-2 
@@ -81,13 +87,12 @@ const Input = styled.input`
        }
 `;
 
-
-
-const BotaoContainer = styled.div.attrs({
-  className: `flex 
-              justify-center 
-              mt-4`,
-})``;
+const BotaoContainer = styled.div`
+  ${tw`flex 
+       justify-center 
+       mt-4`
+       }
+`;
 
 const AdicionarCategoria = ({ aberto, fechado }) => {
   const [novoId, setNovoId] = useState(null);
@@ -105,18 +110,14 @@ const AdicionarCategoria = ({ aberto, fechado }) => {
         setNovoId(ultimoId + 1);
       } catch (error) {
         console.error("Erro ao obter categorias", error);
-        dispatch(
-          categoriaActions.erroCategoriaReducer(
-            "Erro ao obter categorias: " + error.message
-          )
-        );
+        toast.error("Erro ao obter categorias: " + error.message);
       }
     };
 
     if (aberto) {
       fetchProximoCategoriaId();
     }
-  }, [aberto, dispatch]);
+  }, [aberto]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -125,23 +126,20 @@ const AdicionarCategoria = ({ aberto, fechado }) => {
       return;
     }
 
-
     try {
       const novaCategoria = {
         idCategoria: novoId,
         DscTipoCategoria: nomeCategoria,
       };
       await adicionarNovaCategoria(novaCategoria);
-
       dispatch(categoriaActions.adicionarCategoriaReducer(novaCategoria));
 
       const categoriasAtualizadas = await listarCategoria();
-      dispatch(
-        categoriaActions.carregarCategoriasReducer(categoriasAtualizadas)
-      );
+      const subcategoriasAtualizadas = await listarSubcategoria();
+      dispatch(categoriaActions.carregarCategoriasReducer(categoriasAtualizadas));
+      dispatch(subcategoriaActions.carregarSubcategoriasReducer(subcategoriasAtualizadas));
 
       toast.success("Categoria cadastrada com sucesso!");
-
       setNomeCategoria("");
       fechado();
     } catch (error) {
@@ -171,17 +169,10 @@ const AdicionarCategoria = ({ aberto, fechado }) => {
               ></path>
             </svg>
           </BotaoFechar>
-          <Formulario onSubmit={handleSubmit} method="post">
+          <Formulario onSubmit={handleSubmit}>
             <TituloModal>Inserir Categoria</TituloModal>
             <InputsContainer>
-              <InputGroup>
-                <Label>ID da Categoria:</Label>
-                <Input
-                  className="bg-gray-300"
-                  type="text"
-                  value={novoId || ""}
-                  readOnly
-                />
+              <InputGroup>                
               </InputGroup>
               <InputGroup>
                 <Label>Nome da Categoria:</Label>
@@ -193,14 +184,13 @@ const AdicionarCategoria = ({ aberto, fechado }) => {
                 />
               </InputGroup>
               <BotaoContainer>
-              <BotaoPrincipal
-                type="submit"
-                className="px-6 py-3 text-base font-medium"
-              >
-                Cadastrar
-              </BotaoPrincipal>
+                <BotaoPrincipal
+                  type="submit"
+                  className="px-6 py-3 text-base font-medium"
+                >
+                  Cadastrar
+                </BotaoPrincipal>
               </BotaoContainer>
-             
             </InputsContainer>
           </Formulario>
         </ConteudoModal>
@@ -211,3 +201,4 @@ const AdicionarCategoria = ({ aberto, fechado }) => {
 };
 
 export default AdicionarCategoria;
+

@@ -3,26 +3,32 @@ import styled from "styled-components";
 import BotaoPrincipal from "../BotaoPrincipal";
 import ModalCategoria from "../Modais/ModalCategoria";
 import ModalFormaDePagamento from "../Modais/ModalFormaDePagamento";
+import tw from "twin.macro";
 
-const Container = styled.div.attrs({
-  className: `bg-[#a1c082] 
-                w-1/12 
-                h-screen 
-                flex 
-                flex-col 
-                items-center 
-                justify-center 
-                mt-1`,
-})``;
+const Container = styled.div`
+  ${tw`bg-[#a1c082] 
+       w-1/12 
+       h-screen 
+       flex 
+       flex-col 
+       items-center 
+       justify-center 
+       mt-1`
+        }
+    
+`;
 
-const ListaBotoes = styled.ul.attrs({
-  className: `space-y-4 
-                text-sm 
-                font-medium 
-                text-gray-500 
-                dark:text-gray-400 
-                w-full`,
-})``;
+
+const ListaBotoes = styled.ul`
+  ${tw`space-y-4 
+       text-sm 
+       font-medium 
+       text-gray-500 
+       dark:text-gray-400 
+       w-full`
+       }
+`;
+
 
 const ItemBotoes = styled.li.attrs({
   className: `w-full 

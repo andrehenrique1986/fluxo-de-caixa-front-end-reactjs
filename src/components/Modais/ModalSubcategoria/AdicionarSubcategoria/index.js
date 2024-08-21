@@ -21,7 +21,6 @@ const SobreposicaoModal = styled.div`
        }
 `;
   
-
 const ConteudoModal = styled.div`
   ${tw`flex 
        flex-col 
@@ -31,7 +30,8 @@ const ConteudoModal = styled.div`
        w-full 
        max-w-2xl 
        p-6 
-       relative`
+       relative
+       bg-auto`
        }
 `;
 
@@ -47,6 +47,7 @@ const BotaoFechar = styled.button`
 const Formulario = styled.form`
   ${tw`flex 
        flex-col 
+       items-center
        gap-4`
        }
 `;
@@ -61,7 +62,8 @@ const TituloModal = styled.h1`
 
 const InputsContainer = styled.div`
   ${tw`flex 
-       flex-col 
+       flex-col
+       items-center
        gap-4`
        }
 `;
@@ -84,13 +86,15 @@ const Label = styled.label`
 const Input = styled.input`
   ${tw`border-2 
        border-custom-blue 
+       
        p-2 
        rounded`
        }
 `;
 const BotaoContainer = styled.div`
   ${tw`flex 
-       justify-center 
+       justify-center
+       items-center
        mt-4`
        }
 `;
@@ -152,15 +156,11 @@ const AdicionarSubcategoria = ({ aberto, fechado, onSuccess, onError }) => {
       
       const subcategoriasAtualizadas = await listarSubcategoria();
       dispatch(subcategoriaActions.carregarSubcategoriasReducer(subcategoriasAtualizadas));
-
       toast.success("Subcategoria cadastrada com sucesso!");
-
       setNomeSubcategoria("");
       fechado();
-      if (onSuccess) onSuccess(novaSubcategoria);
     } catch (error) {
       toast.error(`Erro ao adicionar uma nova subcategoria: ${error.message}`);
-      if (onError) onError(error);
     }
   };
 
@@ -196,10 +196,6 @@ const AdicionarSubcategoria = ({ aberto, fechado, onSuccess, onError }) => {
               <InputGroup>
                 <Label>Nome da Categoria: </Label>
                 <Input className="bg-gray-300" value={nomeDaCategoria || ""} readOnly />
-              </InputGroup>
-              <InputGroup>
-                <Label>ID da Subcategoria: </Label>
-                <Input className="bg-gray-300" value={idSubcategoria || ""} readOnly />
               </InputGroup>
               <InputGroup>
                 <Label>Nome da Subcategoria: </Label>
