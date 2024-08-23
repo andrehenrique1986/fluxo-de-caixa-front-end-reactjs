@@ -46,7 +46,7 @@ const categoriaReducer = (state = initialState, action) => {
           categoria.idCategoria === action.payload.idCategoria ? action.payload : categoria
         ),
         categoriaPorId:
-          state.categoriaPorId && state.categoriaPorId.idCategoria === action.payload.id
+          state.categoriaPorId && state.categoriaPorId.idCategoria === action.payload.idCategoria
             ? action.payload
             : state.categoriaPorId,
       };
@@ -54,7 +54,7 @@ const categoriaReducer = (state = initialState, action) => {
       return {
         ...state,
         categoriaSelecionada: action.payload
-      }
+      };
     case TypesCategoria.EXCLUIR_CATEGORIA_REDUCER:
       return {
         ...state,
@@ -65,6 +65,9 @@ const categoriaReducer = (state = initialState, action) => {
           state.categoriaPorId && state.categoriaPorId.idCategoria === action.payload
             ? null
             : state.categoriaPorId,
+        nomeSubcategorias: state.nomeSubcategorias.filter(
+          (subcategoria) => subcategoria.idCategoria !== action.payload
+        ),
       };
     case TypesCategoria.ERRO_CATEGORIA_REDUCER:
       return {
@@ -75,6 +78,7 @@ const categoriaReducer = (state = initialState, action) => {
       return state;
   }
 };
+
 
 export const adicionarCategoriaReducer = (categoria) => ({
   type: TypesCategoria.ADICIONAR_CATEGORIA_REDUCER,

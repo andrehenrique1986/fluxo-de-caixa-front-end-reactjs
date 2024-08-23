@@ -4,7 +4,7 @@ const API_BASE_URL = "https://localhost:44395/Subcategoria/";
 
 const api = axios.create({
   baseURL: API_BASE_URL,
-  timeout: 2000,
+  timeout: 5000,
   headers: {
     "Content-Type": "application/json",
   },
@@ -38,18 +38,18 @@ export const listarSubcategoria = async () => {
     }
   };
   
-  export const atualizarSubcategoria = async (id, subcategoria) => {
+  export const atualizarSubcategoria = async (subcategoria) => {
     try {
-      const response = await api.put(`api/atualizarSubcategoria/${id}`, subcategoria);
+      const response = await api.put(`api/atualizarSubcategoria/${subcategoria.idSubcategoria}`, subcategoria);
       return response.data;
     } catch (error) {
       console.error("Erro ao atualizar subcategoria", error);
     }
   };
-  
+
   export const excluirSubcategoria = async (id) => {
     try {
-      const response = await api.delete(`api/excluirSubcategoria/${id}`);
+      const response = await api.delete(`api/excluirSubcategoria/${id.idSubcategoria}`);
       return response.data;
     } catch (error) {
       console.error("Erro ao excluir subcategoria", error);

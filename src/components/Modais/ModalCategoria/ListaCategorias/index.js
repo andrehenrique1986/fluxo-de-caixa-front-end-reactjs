@@ -13,6 +13,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import AdicionarSubcategoria from "../../ModalSubcategoria/AdicionarSubcategoria/index.js";
 import AtualizarCategoria from "../AtualizarCategoria/index.js";
 import ExcluirCategoria from "../ExcluirCategoria/index.js";
+import AtualizarSubcategoria from "../../ModalSubcategoria/AtualizarSubcategoria/index.js";
+import ExcluirSubcategoria from "../../ModalSubcategoria/ExcluirSubcategoria/index.js";
 
 const Container = styled.div`
   ${tw`flex 
@@ -117,6 +119,8 @@ const ListaCategorias = () => {
   const [modalAtualizarCategoria, setModalAtualizarCategoria] = useState(false);
   const [modalExcluirCategoria, setModalExcluirCategoria] = useState(false);
   const [modalAdicionarSubcategoria, setModalAdicionarSubcategoria] = useState(false);
+  const [modalAtualizarSubcategoria, setModalAtualizarSubcategoria] = useState(false);
+  const [modalExcluirSubcategoria, setModalExcluirSubcategoria] = useState(false);
 
   const abrirAdicionarCategoria = () => setModalAdicionarCategoria(true);
   const fecharAdicionarCategoria = () => setModalAdicionarCategoria(false);
@@ -126,6 +130,14 @@ const ListaCategorias = () => {
 
   const abrirExcluirCategoria = () => setModalExcluirCategoria(true);
   const fecharExcluirCategoria = () => setModalExcluirCategoria(false);
+
+
+  const abrirAtualizarSubcategoria = () => setModalAtualizarSubcategoria(true);
+  const fecharAtualizarSubcategoria = () => setModalAtualizarSubcategoria(false);
+
+
+  const abrirExcluirSubcategoria = () => setModalExcluirSubcategoria(true);
+  const fecharExcluirSubcategoria = () => setModalExcluirSubcategoria(false);
 
   const abrirAdicionarSubcategoria = () => {
     if (categoriaSelecionada) {
@@ -184,10 +196,6 @@ const ListaCategorias = () => {
     toast.error('Erro ao atualizar categoria: ' + erro.message);
   };
 
-  const handleErrorExcluirCategoria = (erro) => {
-    toast.error('Erro ao excluir categoria: ' + erro.message);
-  };
-
   const handleSuccessSubcategoria = (novaSubcategoria, subcategoriaAtualizada) => {
     if(subcategoriaAtualizada){
       dispatch(subcategoriaActions.adicionarSubategoriaReducer(novaSubcategoria));
@@ -202,6 +210,10 @@ const ListaCategorias = () => {
 
   const handleSemCategoria = () => {
     toast.warning('Selecione uma categoria');
+  };
+
+  const handleSemSubcategoria = () => {
+    toast.warning('Selecione uma subcategoria');
   };
 
   if (erroCategoria) return <DivErro>{erroCategoria}</DivErro>;
@@ -275,7 +287,7 @@ const ListaCategorias = () => {
               abrirExcluirCategoria();
             } else {
               handleSemCategoria();
-            }
+            } 
           }}>
             Excluir Categoria
           </BotaoPrincipal>
@@ -284,10 +296,26 @@ const ListaCategorias = () => {
           <BotaoPrincipal onClick={abrirAdicionarSubcategoria}>
             Adicionar Sub Categoria
           </BotaoPrincipal>
-          <BotaoPrincipal>
+          <BotaoPrincipal onClick={() => {
+            if (categoriaSelecionada && subCategoriaSelecionada) {
+              abrirAtualizarSubcategoria();
+            } else if (!categoriaSelecionada){
+              handleSemCategoria();
+            } else {
+              handleSemSubcategoria();
+            }
+          }}>
             Atualizar Sub Categoria
           </BotaoPrincipal>
-          <BotaoPrincipal>
+          <BotaoPrincipal onClick={() => {
+            if (categoriaSelecionada && subCategoriaSelecionada) {
+              abrirExcluirSubcategoria();
+            } else if (!categoriaSelecionada){
+              handleSemCategoria();
+            } else {
+              handleSemSubcategoria();
+            }
+          }}>
             Excluir Sub Categoria
           </BotaoPrincipal>
         </BotaoContainer>
@@ -297,6 +325,8 @@ const ListaCategorias = () => {
         fechado={fecharAdicionarCategoria}
         onSuccess={handleSuccessNovaCategoria}
         onError={handleErrorAdicionarCategoria}
+        subcategoriaId={subcategoriasFiltradas?.idDaSubcategoria}
+        subcategoriaFiltrada={subcategoriasFiltradas?.nomeDaSubcategoria}
       />
       <AtualizarCategoria 
         aberto={modalAtualizarCategoria}
@@ -310,13 +340,30 @@ const ListaCategorias = () => {
         aberto={modalExcluirCategoria}
         fechado={fecharExcluirCategoria}
         categoriaId={categoriaSelecionada?.id}
-        nomeCategoriaSelecionadaClick={categoriaSelecionada?.nomeDaCategoria}
+        setNomeCategoriaSelecionadaClick={categoriaSelecionada?.nomeDaCategoria}
+        subcategoriaIds={subcategoriasFiltradas.map(sub => sub.idDaSubcategoria)} 
       />
       <AdicionarSubcategoria 
         aberto={modalAdicionarSubcategoria}
         fechado={fecharAdicionarSubcategoria}
         onSuccess={handleSuccessSubcategoria}
         onError={handleErrorSubcategoria}
+      />
+      <AtualizarSubcategoria
+        aberto={modalAtualizarSubcategoria}
+        fechado={fecharAtualizarSubcategoria}
+        categoriaId={categoriaSelecionada?.id}
+        nomeCategoriaSelecionadaClick={categoriaSelecionada?.nomeDaCategoria}
+        subcategoriaId={subCategoriaSelecionada?.idDaSubcategoria}
+        subcategoriaSelecionada={subCategoriaSelecionada?.nomeDaSubcategoria}
+      />
+      <ExcluirSubcategoria 
+        aberto={modalExcluirSubcategoria}
+        fechado={fecharExcluirSubcategoria}
+        categoriaId={categoriaSelecionada?.id}
+        setNomeCategoriaSelecionadaClick={categoriaSelecionada?.nomeDaCategoria}
+        subcategoriaId={subCategoriaSelecionada?.idDaSubcategoria}
+        subcategoriaSelecionada={subCategoriaSelecionada?.nomeDaSubcategoria}
       />
       <ToastContainer />
     </Container>

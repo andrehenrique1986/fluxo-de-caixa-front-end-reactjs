@@ -50,9 +50,9 @@ export const atualizarCategoria = async (categoria) => {
   }
 };
 
-export const excluirCategoria = async (categoria) => {
+export const excluirCategoria = async (id) => {
   try {
-    const response = await api.delete(`api/excluirCategoria/${categoria.idCategoria}`);
+    const response = await api.delete(`api/excluirCategoria/${id}`);
     return response.data;
   } catch (error) {
     console.error("Erro ao excluir categoria", error);

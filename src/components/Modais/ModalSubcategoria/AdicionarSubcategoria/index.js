@@ -100,7 +100,7 @@ const BotaoContainer = styled.div`
 `;
 
 
-const AdicionarSubcategoria = ({ aberto, fechado, onSuccess, onError }) => {
+const AdicionarSubcategoria = ({ aberto, fechado}) => {
   const dispatch = useDispatch();
   const categoriaSelecionada = useSelector(state => state.categorias.categoriaSelecionada);
 
