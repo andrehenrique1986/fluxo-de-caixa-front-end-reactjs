@@ -64,7 +64,8 @@ const TabBarBotoes = () => {
           />
         </ItemBotoes>
         <ItemBotoes>
-          <BotaoPrincipal onClick={abrirModalFormaDePagamento}>Forma Pagamento</BotaoPrincipal>
+          <BotaoPrincipal onClick={abrirModalFormaDePagamento}>
+          Forma Pagamento</BotaoPrincipal>
           <ModalFormaDePagamento 
             aberto={modalNovaFormaDePagamento}
             fechado={fecharModalFormaDePagamento}

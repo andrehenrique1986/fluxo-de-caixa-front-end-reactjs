@@ -8,8 +8,8 @@ import styled from "styled-components";
 import tw from "twin.macro";
 import BotaoPrincipal from "../../../BotaoPrincipal";
 import AdicionarCategoria from "../AdicionarCategoria";
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import AdicionarSubcategoria from "../../ModalSubcategoria/AdicionarSubcategoria/index.js";
 import AtualizarCategoria from "../AtualizarCategoria/index.js";
 import ExcluirCategoria from "../ExcluirCategoria/index.js";
@@ -66,11 +66,11 @@ const Item = styled.li`
        px-4 
        cursor-pointer 
        border-0`}
-  ${({ isSelected }) => isSelected ? 
-                                  tw`bg-blue-400 
-                                     text-white` 
-                                  :
-                                  tw`bg-gray-100 
+  ${({ isSelected }) =>
+    isSelected
+      ? tw`bg-blue-400 
+                                     text-white`
+      : tw`bg-gray-100 
                                      hover:bg-blue-400 
                                      hover:text-white`}
   ${({ isSelected }) => !isSelected && tw`text-black`}
@@ -107,20 +107,25 @@ const BotaoContainer = styled.div`
 
 const ListaCategorias = () => {
   const dispatch = useDispatch();
-  const categorias = useSelector(state => state.categorias.categorias) || [];
-  const subcategorias = useSelector(state => state.subcategorias.subcategorias) || [];
-  const erroCategoria = useSelector(state => state.categorias.error);
-  const erroSubcategoria = useSelector(state => state.subcategorias.error);
+  const categorias = useSelector((state) => state.categorias.categorias) || [];
+  const subcategorias =
+    useSelector((state) => state.subcategorias.subcategorias) || [];
+  const erroCategoria = useSelector((state) => state.categorias.error);
+  const erroSubcategoria = useSelector((state) => state.subcategorias.error);
 
-  const [nomeCategoriaSelecionadaClick, setNomeCategoriaSelecionadaClick] = useState(null);
+  const [nomeCategoriaSelecionadaClick, setNomeCategoriaSelecionadaClick] =
+    useState(null);
   const [categoriaSelecionada, setCategoriaSelecionada] = useState(null);
   const [subCategoriaSelecionada, setSubCategoriaSelecionada] = useState(null);
   const [modalAdicionarCategoria, setModalAdicionarCategoria] = useState(false);
   const [modalAtualizarCategoria, setModalAtualizarCategoria] = useState(false);
   const [modalExcluirCategoria, setModalExcluirCategoria] = useState(false);
-  const [modalAdicionarSubcategoria, setModalAdicionarSubcategoria] = useState(false);
-  const [modalAtualizarSubcategoria, setModalAtualizarSubcategoria] = useState(false);
-  const [modalExcluirSubcategoria, setModalExcluirSubcategoria] = useState(false);
+  const [modalAdicionarSubcategoria, setModalAdicionarSubcategoria] =
+    useState(false);
+  const [modalAtualizarSubcategoria, setModalAtualizarSubcategoria] =
+    useState(false);
+  const [modalExcluirSubcategoria, setModalExcluirSubcategoria] =
+    useState(false);
 
   const abrirAdicionarCategoria = () => setModalAdicionarCategoria(true);
   const fecharAdicionarCategoria = () => setModalAdicionarCategoria(false);
@@ -131,10 +136,9 @@ const ListaCategorias = () => {
   const abrirExcluirCategoria = () => setModalExcluirCategoria(true);
   const fecharExcluirCategoria = () => setModalExcluirCategoria(false);
 
-
   const abrirAtualizarSubcategoria = () => setModalAtualizarSubcategoria(true);
-  const fecharAtualizarSubcategoria = () => setModalAtualizarSubcategoria(false);
-
+  const fecharAtualizarSubcategoria = () =>
+    setModalAtualizarSubcategoria(false);
 
   const abrirExcluirSubcategoria = () => setModalExcluirSubcategoria(true);
   const fecharExcluirSubcategoria = () => setModalExcluirSubcategoria(false);
@@ -147,7 +151,8 @@ const ListaCategorias = () => {
     }
   };
 
-  const fecharAdicionarSubcategoria = () => setModalAdicionarSubcategoria(false);
+  const fecharAdicionarSubcategoria = () =>
+    setModalAdicionarSubcategoria(false);
 
   useEffect(() => {
     const fetchCategorias = async () => {
@@ -156,7 +161,11 @@ const ListaCategorias = () => {
         dispatch(categoriaActions.carregarCategoriasReducer(data));
       } catch (erro) {
         console.error("Erro ao carregar categorias:", erro);
-        dispatch(categoriaActions.erroCategoriaReducer("Erro ao carregar categorias: " + erro.message));
+        dispatch(
+          categoriaActions.erroCategoriaReducer(
+            "Erro ao carregar categorias: " + erro.message
+          )
+        );
       }
     };
 
@@ -166,7 +175,11 @@ const ListaCategorias = () => {
         dispatch(subcategoriaActions.carregarSubcategoriasReducer(data));
       } catch (erro) {
         console.error("Erro ao carregar subcategorias:", erro);
-        dispatch(subcategoriaActions.erroSubcategoriaReducer("Erro ao carregar subcategorias: " + erro.message));
+        dispatch(
+          subcategoriaActions.erroSubcategoriaReducer(
+            "Erro ao carregar subcategorias: " + erro.message
+          )
+        );
       }
     };
 
@@ -175,7 +188,7 @@ const ListaCategorias = () => {
   }, [dispatch]);
 
   const handleSuccessNovaCategoria = (novaCategoria) => {
-    toast.success('Categoria cadastrada com sucesso!');
+    toast.success("Categoria cadastrada com sucesso!");
     dispatch(categoriaActions.adicionarCategoriaReducer(novaCategoria));
     setModalAdicionarCategoria(false);
   };
@@ -183,44 +196,53 @@ const ListaCategorias = () => {
   const handleSuccessAtualizarCategoria = (categoria, categoriaAtualizada) => {
     if (categoriaAtualizada) {
       dispatch(categoriaActions.atualizarCategoriaReducer(categoria));
-      toast.success('Categoria atualizada com sucesso!');
+      toast.success("Categoria atualizada com sucesso!");
     }
     setModalAtualizarCategoria(false);
   };
 
   const handleErrorAdicionarCategoria = (erro) => {
-    toast.error('Erro ao cadastrar categoria: ' + erro.message);
+    toast.error("Erro ao cadastrar categoria: " + erro.message);
   };
 
   const handleErrorAtualizarCategoria = (erro) => {
-    toast.error('Erro ao atualizar categoria: ' + erro.message);
+    toast.error("Erro ao atualizar categoria: " + erro.message);
   };
 
-  const handleSuccessSubcategoria = (novaSubcategoria, subcategoriaAtualizada) => {
-    if(subcategoriaAtualizada){
-      dispatch(subcategoriaActions.adicionarSubategoriaReducer(novaSubcategoria));
-      toast.success('Subcategoria cadastrada com sucesso!');
+  const handleSuccessSubcategoria = (
+    novaSubcategoria,
+    subcategoriaAtualizada
+  ) => {
+    if (subcategoriaAtualizada) {
+      dispatch(
+        subcategoriaActions.adicionarSubategoriaReducer(novaSubcategoria)
+      );
+      toast.success("Subcategoria cadastrada com sucesso!");
     }
     setModalAdicionarSubcategoria(false);
   };
 
   const handleErrorSubcategoria = (erro) => {
-    toast.error('Erro ao cadastrar subcategoria: ' + erro.message);
+    toast.error("Erro ao cadastrar subcategoria: " + erro.message);
   };
 
   const handleSemCategoria = () => {
-    toast.warning('Selecione uma categoria');
+    toast.warning("Selecione uma categoria");
   };
 
   const handleSemSubcategoria = () => {
-    toast.warning('Selecione uma subcategoria');
+    toast.warning("Selecione uma subcategoria");
   };
 
   if (erroCategoria) return <DivErro>{erroCategoria}</DivErro>;
   if (erroSubcategoria) return <DivErro>{erroSubcategoria}</DivErro>;
 
   const subcategoriasFiltradas = categoriaSelecionada?.nomeDaCategoria
-    ? subcategorias.filter(subcategoria => subcategoria?.nomeDaCategoria === categoriaSelecionada?.nomeDaCategoria)
+    ? subcategorias.filter(
+        (subcategoria) =>
+          subcategoria?.nomeDaCategoria ===
+          categoriaSelecionada?.nomeDaCategoria
+      )
     : [];
 
   return (
@@ -234,10 +256,14 @@ const ListaCategorias = () => {
               categorias.map((categoria) => (
                 <Item
                   key={categoria.id}
-                  isSelected={categoria?.nomeDaCategoria === nomeCategoriaSelecionadaClick}
-                  onClick={() => { 
+                  isSelected={
+                    categoria?.nomeDaCategoria === nomeCategoriaSelecionadaClick
+                  }
+                  onClick={() => {
                     setCategoriaSelecionada(categoria);
-                    dispatch(categoriaActions.setCategoriaSelecionadaReducer(categoria));
+                    dispatch(
+                      categoriaActions.setCategoriaSelecionadaReducer(categoria)
+                    );
                     setNomeCategoriaSelecionadaClick(categoria.nomeDaCategoria);
                   }}
                 >
@@ -256,10 +282,14 @@ const ListaCategorias = () => {
               subcategoriasFiltradas.map((subcategoria) => (
                 <Item
                   key={subcategoria.idDaSubcategoria}
-                  isSelected={subcategoria?.nomeDaSubcategoria === subCategoriaSelecionada?.nomeDaSubcategoria}
+                  isSelected={
+                    subcategoria?.nomeDaSubcategoria ===
+                    subCategoriaSelecionada?.nomeDaSubcategoria
+                  }
                   onClick={() => setSubCategoriaSelecionada(subcategoria)}
                 >
-                  {subcategoria.idDaSubcategoria} - {subcategoria.nomeDaSubcategoria}
+                  {subcategoria.idDaSubcategoria} -{" "}
+                  {subcategoria.nomeDaSubcategoria}
                 </Item>
               ))
             ) : (
@@ -273,22 +303,26 @@ const ListaCategorias = () => {
           <BotaoPrincipal onClick={abrirAdicionarCategoria}>
             Adicionar Categoria
           </BotaoPrincipal>
-          <BotaoPrincipal onClick={() =>{
-            if (categoriaSelecionada) {
-              abrirAtualizarCategoria();
-            } else {
-              handleSemCategoria();
-            }
-          }}>
+          <BotaoPrincipal
+            onClick={() => {
+              if (categoriaSelecionada) {
+                abrirAtualizarCategoria();
+              } else {
+                handleSemCategoria();
+              }
+            }}
+          >
             Atualizar Categoria
           </BotaoPrincipal>
-          <BotaoPrincipal onClick={() => {
-            if (categoriaSelecionada) {
-              abrirExcluirCategoria();
-            } else {
-              handleSemCategoria();
-            } 
-          }}>
+          <BotaoPrincipal
+            onClick={() => {
+              if (categoriaSelecionada) {
+                abrirExcluirCategoria();
+              } else {
+                handleSemCategoria();
+              }
+            }}
+          >
             Excluir Categoria
           </BotaoPrincipal>
         </BotaoContainer>
@@ -296,26 +330,30 @@ const ListaCategorias = () => {
           <BotaoPrincipal onClick={abrirAdicionarSubcategoria}>
             Adicionar Sub Categoria
           </BotaoPrincipal>
-          <BotaoPrincipal onClick={() => {
-            if (categoriaSelecionada && subCategoriaSelecionada) {
-              abrirAtualizarSubcategoria();
-            } else if (!categoriaSelecionada){
-              handleSemCategoria();
-            } else {
-              handleSemSubcategoria();
-            }
-          }}>
+          <BotaoPrincipal
+            onClick={() => {
+              if (categoriaSelecionada && subCategoriaSelecionada) {
+                abrirAtualizarSubcategoria();
+              } else if (!categoriaSelecionada) {
+                handleSemCategoria();
+              } else {
+                handleSemSubcategoria();
+              }
+            }}
+          >
             Atualizar Sub Categoria
           </BotaoPrincipal>
-          <BotaoPrincipal onClick={() => {
-            if (categoriaSelecionada && subCategoriaSelecionada) {
-              abrirExcluirSubcategoria();
-            } else if (!categoriaSelecionada){
-              handleSemCategoria();
-            } else {
-              handleSemSubcategoria();
-            }
-          }}>
+          <BotaoPrincipal
+            onClick={() => {
+              if (categoriaSelecionada && subCategoriaSelecionada) {
+                abrirExcluirSubcategoria();
+              } else if (!categoriaSelecionada) {
+                handleSemCategoria();
+              } else {
+                handleSemSubcategoria();
+              }
+            }}
+          >
             Excluir Sub Categoria
           </BotaoPrincipal>
         </BotaoContainer>
@@ -328,7 +366,7 @@ const ListaCategorias = () => {
         subcategoriaId={subcategoriasFiltradas?.idDaSubcategoria}
         subcategoriaFiltrada={subcategoriasFiltradas?.nomeDaSubcategoria}
       />
-      <AtualizarCategoria 
+      <AtualizarCategoria
         aberto={modalAtualizarCategoria}
         fechado={fecharAtualizarCategoria}
         onSuccess={handleSuccessAtualizarCategoria}
@@ -336,14 +374,16 @@ const ListaCategorias = () => {
         categoriaId={categoriaSelecionada?.id}
         nomeCategoriaSelecionadaClick={categoriaSelecionada?.nomeDaCategoria}
       />
-      <ExcluirCategoria 
+      <ExcluirCategoria
         aberto={modalExcluirCategoria}
         fechado={fecharExcluirCategoria}
         categoriaId={categoriaSelecionada?.id}
         setNomeCategoriaSelecionadaClick={categoriaSelecionada?.nomeDaCategoria}
-        subcategoriaIds={subcategoriasFiltradas.map(sub => sub.idDaSubcategoria)} 
+        subcategoriaIds={subcategoriasFiltradas.map(
+          (sub) => sub.idDaSubcategoria
+        )}
       />
-      <AdicionarSubcategoria 
+      <AdicionarSubcategoria
         aberto={modalAdicionarSubcategoria}
         fechado={fecharAdicionarSubcategoria}
         onSuccess={handleSuccessSubcategoria}
@@ -357,7 +397,7 @@ const ListaCategorias = () => {
         subcategoriaId={subCategoriaSelecionada?.idDaSubcategoria}
         subcategoriaSelecionada={subCategoriaSelecionada?.nomeDaSubcategoria}
       />
-      <ExcluirSubcategoria 
+      <ExcluirSubcategoria
         aberto={modalExcluirSubcategoria}
         fechado={fecharExcluirSubcategoria}
         categoriaId={categoriaSelecionada?.id}
@@ -371,10 +411,3 @@ const ListaCategorias = () => {
 };
 
 export default ListaCategorias;
-
-
-
-
-
-
-

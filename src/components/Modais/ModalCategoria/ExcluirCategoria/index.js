@@ -97,7 +97,7 @@ const ExcluirCategoria = ({ aberto, fechado, categoriaId, nomeCategoriaSeleciona
             </svg>
           </BotaoFechar>
           <TituloModal>Excluir Categoria</TituloModal>
-          <Texto>Deseja excluir a categoria {nomeCategoria} e suas subcategorias?</Texto>
+          <Texto>Deseja excluir esta categoria e suas subcategorias?</Texto>
           <BotaoContainer>
             <BotaoPrincipal onClick={handleSubmit} type="button" className="px-6 py-3 text-base font-medium">
               Sim

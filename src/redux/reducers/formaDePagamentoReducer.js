@@ -35,17 +35,13 @@ const TypesFormaDePagamento = {
           ...state,
           formaDePagamentoPorId: action.payload,
         };
-      case TypesFormaDePagamento.ATUALIZAR_FORMA_DE_PAGAMENTO_REDUCER:
-        return {
-          ...state,
-          formasDePagamento: state.formasDePagamento.map((formaDePagamento) =>
-            formaDePagamento.id === action.payload.id ? action.payload : formaDePagamento
-          ),
-          formaDePorId:
-            state.formaDePagamentoPorId && state.formaDePagamentoPorId.id === action.payload.id
-              ? action.payload
-              : state.formaDePagamentoPorId,
-        };
+        case TypesFormaDePagamento.ATUALIZAR_FORMA_DE_PAGAMENTO_REDUCER:
+          return {
+            ...state,
+            formasDePagamento: state.formasDePagamento.map((formaDePagamento) =>
+              formaDePagamento.idFormaDePagamento === action.payload.idFormaDePagamento ? action.payload : formaDePagamento
+            ),
+          };
       case TypesFormaDePagamento.SET_FORMA_DE_PAGAMENTO_SELECIONADA_REDUCER:
         return {
           ...state,
@@ -55,12 +51,12 @@ const TypesFormaDePagamento = {
         return {
           ...state,
           formasDePagamento: state.formasDePagamento.filter(
-            (formaDePagamento) => formaDePagamento.id !== action.payload
+            (formaDePagamento) => formaDePagamento.idFormaDePagamento !== action.payload
           ),
           formaDePagamentoPorId:
-            state.formaDePagamentoPorId && state.formaDePagamentoPorId.id === action.payload
+            state.formaDePagamentoPorId && state.formaDePagamentoPorId.idFormaDePagamento === action.payload
               ? null
-              : state.categoriaPorId,
+              : state.formaDePagamentoPorId,
         };
       case TypesFormaDePagamento.ERRO_FORMA_DE_PAGAMENTO_REDUCER:
         return {
