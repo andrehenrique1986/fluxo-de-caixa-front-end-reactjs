@@ -4,6 +4,7 @@ import BotaoPrincipal from "../BotaoPrincipal";
 import ModalCategoria from "../Modais/ModalCategoria";
 import ModalFormaDePagamento from "../Modais/ModalFormaDePagamento";
 import tw from "twin.macro";
+import { useNavigate } from "react-router-dom";
 
 const Container = styled.div`
   ${tw`bg-[#a1c082] 
@@ -14,10 +15,8 @@ const Container = styled.div`
        items-center 
        justify-center 
        mt-1`
-        }
-    
+    }
 `;
-
 
 const ListaBotoes = styled.ul`
   ${tw`space-y-4 
@@ -26,9 +25,8 @@ const ListaBotoes = styled.ul`
        text-gray-500 
        dark:text-gray-400 
        w-full`
-       }
+    }
 `;
-
 
 const ItemBotoes = styled.li.attrs({
   className: `w-full 
@@ -38,21 +36,31 @@ const ItemBotoes = styled.li.attrs({
 })``;
 
 const TabBarBotoes = () => {
+  const navigate = useNavigate();
   const [modalNovaCategoria, setModalNovaCategoria] = useState(false);
   const abrirModalCategoria = () => setModalNovaCategoria(true);
   const fecharModalCategoria = () => setModalNovaCategoria(false);
-
 
   const [modalNovaFormaDePagamento, setModalNovaFormaDePagamento] = useState(false);
   const abrirModalFormaDePagamento = () => setModalNovaFormaDePagamento(true);
   const fecharModalFormaDePagamento = () => setModalNovaFormaDePagamento(false);
 
+ 
+
+  const handlePainel = () => {
+    navigate('/painelPrincipal'); 
+  }
+
+
+  const handleDashboard = () => {
+    navigate('/dashboard');
+  }
 
   return (
     <Container>
       <ListaBotoes>
         <ItemBotoes>
-          <BotaoPrincipal>Painel</BotaoPrincipal>
+          <BotaoPrincipal onClick={handlePainel}>Painel</BotaoPrincipal>
         </ItemBotoes>
         <ItemBotoes>
           <BotaoPrincipal onClick={abrirModalCategoria}>
@@ -65,14 +73,15 @@ const TabBarBotoes = () => {
         </ItemBotoes>
         <ItemBotoes>
           <BotaoPrincipal onClick={abrirModalFormaDePagamento}>
-          Forma Pagamento</BotaoPrincipal>
-          <ModalFormaDePagamento 
+            Forma Pagamento
+          </BotaoPrincipal>
+          <ModalFormaDePagamento
             aberto={modalNovaFormaDePagamento}
             fechado={fecharModalFormaDePagamento}
           />
         </ItemBotoes>
         <ItemBotoes>
-          <BotaoPrincipal>Dashboard</BotaoPrincipal>
+          <BotaoPrincipal onClick={handleDashboard}>Dashboard</BotaoPrincipal>
         </ItemBotoes>
       </ListaBotoes>
     </Container>

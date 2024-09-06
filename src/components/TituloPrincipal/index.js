@@ -1,4 +1,5 @@
 import React from "react";
+import { useLocation } from "react-router-dom";
 import styled from "styled-components";
 
 const Container = styled.div.attrs({
@@ -15,7 +16,12 @@ const Texto = styled.h2.attrs({
 })``;
 
 const TituloPrincipal = () => {
+
+
+  const location = useLocation();
+
   return (
+    
     <Container>
       <Texto>Movimentação Financeira</Texto>
     </Container>
