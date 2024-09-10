@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import tw from 'twin.macro';
 import BotaoPrincipal from '../BotaoPrincipal';
+import AdicionarRegistro from '../Modais/ModalRegistro/AdicionarRegistro';
 
 
 const Container = styled.div`
@@ -66,6 +67,12 @@ const ButtonsContainer = styled.div`
 `;
 
 const InputsDatas = () => {
+
+  const [modalAdicionarRegistro, setModalAdicionarRegistro] = useState(false);
+
+   const abrirModalAdicionarRegistro = () => setModalAdicionarRegistro(true);
+   const fecharModalAdicionarRegistro = () => setModalAdicionarRegistro(false);
+
   return (
     <Container>
       <InputsEBotaoContainer>
@@ -76,7 +83,11 @@ const InputsDatas = () => {
           <InputData type="date" />
           <ButtonsContainer>
             <BotaoPrincipal>Buscar</BotaoPrincipal>
-            <BotaoPrincipal>Novo Registro</BotaoPrincipal>
+            <BotaoPrincipal onClick={abrirModalAdicionarRegistro}>Novo Registro</BotaoPrincipal>
+            <AdicionarRegistro 
+            aberto={modalAdicionarRegistro}
+            fechado={fecharModalAdicionarRegistro} 
+            />
           </ButtonsContainer>
         </InputsAndButtonsContainer>
       </InputsEBotaoContainer>

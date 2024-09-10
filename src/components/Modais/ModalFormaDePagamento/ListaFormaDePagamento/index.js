@@ -105,8 +105,7 @@ const ListaFormaDePagamento = () => {
     (state) => state.formasDePagamento.error
   );
 
-  //const [formaDePagamentoSelecionada, setFormaDePagamentoSelecionada] =
-    //useState(null);
+  
   const [
     formaDePagamentoSelecionadaClick,
     setFormaDePagamentoSelecionadaClick,

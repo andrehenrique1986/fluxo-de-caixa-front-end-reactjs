@@ -80,7 +80,7 @@ const categoriaReducer = (state = initialState, action) => {
 };
 
 
-export const adicionarCategoriaReducer = (categoria) => ({
+ const adicionarCategoriaReducer = (categoria) => ({
   type: TypesCategoria.ADICIONAR_CATEGORIA_REDUCER,
   payload: {
     idCategoria: categoria.idCategoria,

@@ -39,41 +39,10 @@ const BotaoFechar = styled.button`
        hover:text-gray-700`}
 `;
 
-const Formulario = styled.form`
-  ${tw`flex 
-       flex-col 
-       space-y-4`}
-`;
-
 const TituloModal = styled.h1`
   ${tw`text-2xl 
        mb-4 
        text-center`}
-`;
-
-const InputsContainer = styled.div`
-  ${tw`flex 
-       flex-col 
-       space-y-4`}
-`;
-
-const InputGroup = styled.div`
-  ${tw`flex 
-       items-center 
-       space-x-4`}
-`;
-
-const Label = styled.label`
-  ${tw`w-32 
-       text-right 
-       font-medium`}
-`;
-
-const Input = styled.input`
-  ${tw`border-2 
-       border-custom-blue 
-       p-2 
-       rounded`}
 `;
 
 const Texto = styled.p`

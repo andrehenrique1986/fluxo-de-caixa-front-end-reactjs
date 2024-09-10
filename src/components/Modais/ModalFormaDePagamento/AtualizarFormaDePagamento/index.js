@@ -7,7 +7,7 @@ import BotaoPrincipal from "../../../BotaoPrincipal";
 import { atualizarFormaDePagamento, listarFormaDePagamento } from "../../../../api/formaDePagamentoAPI";
 import { formaDePagamentoActions } from "../../../../redux/reducers/formaDePagamentoReducer";
 
-// Styled Components
+
 const SobreposicaoModal = styled.div`
   ${tw`fixed 
        inset-0 
