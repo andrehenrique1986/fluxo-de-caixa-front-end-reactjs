@@ -8,9 +8,27 @@ import { listarRegistro } from "../../api/registroAPI";
 import { registroActions } from "../../redux/reducers/registroReducer";
 
 
+
 const formatarData = (data) => {
-  const [ano, mes, dia] = data.split('-');
-  return `${dia.substring(0, 2)}/${mes}/${ano}`;
+   if(typeof data === 'string'){
+     const [ano, mes, dia] = data.split('-');
+     return `${dia.substring(0, 2)}/${mes}/${ano}`;
+   } else {
+    console.error("Erro:", data);
+   }
+};
+
+const formatarMoeda = (valor) => {
+  
+  if (typeof valor !== 'number' || isNaN(valor) || !isFinite(valor)) {
+    console.error("Erro:", valor);
+    return 'Valor Inválido';
+  }
+
+  return valor.toLocaleString('pt-BR', {
+    style: 'currency',
+    currency: 'BRL',
+  });
 };
 
 const Container = styled.div`
@@ -43,19 +61,25 @@ const Icone = styled.div`
   align-items: center;
 `;
 
+const DivErro = styled.div`
+${tw`text-red-600 
+     font-bold`}
+`;
+
 const Painel = () => {
   const dispatch = useDispatch();
   const registros = useSelector(state => state.registros.registros || []); 
+  //const erroRegistros = useSelector((state) => state.registros.error);
+
+
+ 
 
   useEffect(() => {
     const listarRegistros = async () => {
       try {
         const data = await listarRegistro();
-        console.log('Dados retornados da API:', data);
         dispatch(registroActions.carregarRegistrosReducer(data));
-        
       } catch (error) {
-        console.error("Erro ao carregar os registros:", error);
         dispatch(registroActions.erroRegistroReducer("Erro ao carregar os registros:", error.message));
       }
     };
@@ -63,6 +87,8 @@ const Painel = () => {
     listarRegistros();
   }, [dispatch]);
 
+
+  
   return (
     <Container>
       <Tabela>
@@ -91,7 +117,7 @@ const Painel = () => {
                 <CelulaTabela>{registro.subcategoriaNome}</CelulaTabela>
                 <CelulaTabela>{registro.tipoDeCusto}</CelulaTabela>
                 <CelulaTabela>{registro.formaDePagamento}</CelulaTabela>
-                <CelulaTabela>{registro.valor}</CelulaTabela>
+                <CelulaTabela>{formatarMoeda(registro.valor)}</CelulaTabela>
                 <CelulaTabela><Icone><BsFillPencilFill className="text-gray-500" /></Icone></CelulaTabela>
                 <CelulaTabela><Icone><FaTrashAlt className="text-red-600" /></Icone></CelulaTabela>
               </LinhaTabela>

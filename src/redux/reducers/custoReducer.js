@@ -2,6 +2,7 @@ const TypesCusto = {
     
     CARREGAR_CUSTOS_REDUCER: 'CARREGAR_CUSTOS_REDUCER',
     CARREGAR_CUSTOS_POR_ID_REDUCER: 'CARREGAR_CUSTOS_POR_ID_REDUCER', 
+    ERRO_CUSTOS_REDUCER: "ERRO_CUSTOS_REDUCER",
     
   };
   
@@ -26,7 +27,11 @@ const TypesCusto = {
           ...state,
           fluxoPorId: action.payload
         };
-        
+      case TypesCusto.ERRO_CUSTOS_REDUCER:
+        return {
+          ...state,
+          error: action.payload,
+        }  
     
       default:
         return state;
@@ -45,11 +50,16 @@ const TypesCusto = {
     payload: custoPorId
   });
   
+  const erroCustoReducer = (error) => ({
+    type: TypesCusto.ERRO_CUSTOS_REDUCER,
+    payload: error,
+  });
   
   
-  export const subcategoriaActions = {
+  export const custoActions = {
     carregarCustosReducer,
     carregarCustoPorIdReducer,
+    erroCustoReducer
   };
   
   export default custoReducer;

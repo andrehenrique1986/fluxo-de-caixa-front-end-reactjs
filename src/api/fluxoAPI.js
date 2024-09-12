@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_BASE_URL = "https://localhost:44374/Fluxo";
+const API_BASE_URL = "https://localhost:44374/Fluxo/";
 
 const api = axios.create({
   baseURL: API_BASE_URL,

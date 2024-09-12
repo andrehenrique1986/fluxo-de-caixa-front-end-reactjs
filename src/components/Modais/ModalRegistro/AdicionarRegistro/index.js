@@ -1,16 +1,19 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import tw from "twin.macro";
-import InputMask from 'react-input-mask';
+import InputMask from "react-input-mask";
 import { toast, ToastContainer } from "react-toastify";
-import { useDispatch, useSelector } from "react-redux";
-import { adicionarRegistro } from "../../../../api/registroAPI";
+import { useDispatch } from "react-redux";
+import { adicionarRegistro, listarRegistro } from "../../../../api/registroAPI";
 import { listarCategoria } from "../../../../api/categoriaAPI";
 import { listarSubcategoria } from "../../../../api/subcategoriaAPI";
 import { listarFormaDePagamento } from "../../../../api/formaDePagamentoAPI";
 import { listarCusto } from "../../../../api/custoAPI";
 import { listarFluxo } from "../../../../api/fluxoAPI";
 import BotaoPrincipal from "../../../BotaoPrincipal";
+import { registroActions } from "../../../../redux/reducers/registroReducer";
+
+
 
 const SobreposicaoModal = styled.div`
   ${tw`fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50`}
@@ -48,14 +51,11 @@ const Input = styled.input`
   ${tw`border-2 border-custom-blue p-2 rounded w-1/2 text-black`}
 `;
 
-
 const ComboBox = styled.select`
   ${tw`border-2 border-custom-blue p-2 rounded w-1/2 text-black`}
 `;
 
-
-const ItemComboBox = styled.option`
-`;
+const ItemComboBox = styled.option``;
 
 const BotaoContainer = styled.div`
   ${tw`flex justify-center items-center space-x-4 mt-4`}
@@ -64,27 +64,27 @@ const BotaoContainer = styled.div`
 const AdicionarRegistro = ({ aberto, fechado }) => {
   const dispatch = useDispatch();
   const [categoria, setCategoria] = useState([]);
-  const subcategorias = useSelector(state => state.subcategorias);
-  const [subcategoria, setSubcategoria] = useState(subcategorias);
+  const [subcategoria, setSubcategoria] = useState([]);
   const [formaDePagamento, setFormaDePagamento] = useState([]);
   const [fluxo, setFluxo] = useState([]);
   const [custo, setCusto] = useState([]);
 
-  const [categoriaSelecionada, setCategoriaSelecionada] = useState('');
-  const [subCategoriaSelecionada, setSubCategoriaSelecionada] = useState('');
+  const [categoriaSelecionada, setCategoriaSelecionada] = useState("");
+  const [subCategoriaSelecionada, setSubCategoriaSelecionada] = useState("");
   const [registro, setRegistro] = useState({
     idRegistro: null,
-    dtRegistro: '',
-    fluxo: '',
-    categoria: '',
-    subCategoria: '',
-    tipoCusto: '',
-    formaPagamento: '',
-    valor: ''
+    dtRegistro: "",
+    fluxo: "",
+    categoria: "",
+    subCategoria: "",
+    tipoCusto: "",
+    formaPagamento: "",
+    valor: "",
   });
 
   useEffect(() => {
     if (aberto) {
+      limparRegistros();
       fetchData();
     }
   }, [aberto]);
@@ -96,101 +96,126 @@ const AdicionarRegistro = ({ aberto, fechado }) => {
         categoriaData,
         subcategoriaData,
         formaDePagamentoData,
-        custoData
+        custoData,
       ] = await Promise.all([
         listarFluxo(),
         listarCategoria(),
         listarSubcategoria(),
         listarFormaDePagamento(),
-        listarCusto()
+        listarCusto(),
       ]);
       setFluxo(fluxoData);
       setCategoria(categoriaData);
       setSubcategoria(subcategoriaData);
       setFormaDePagamento(formaDePagamentoData);
       setCusto(custoData);
-      console.log('Fluxo:', fluxoData);
-      console.log('Categoria:', categoriaData);
-      console.log('Subcategoria:', subcategoriaData);
-      console.log('Forma de Pagamento:', formaDePagamentoData);
-      console.log('Custo:', custoData);
     } catch (error) {
       toast.error("Erro ao carregar os dados: " + error.message);
     }
   };
 
+  const limparRegistros = () => {
+    setRegistro({
+      idRegistro: null,
+      dtRegistro: "",
+      fluxo: "",
+      categoria: "",
+      subCategoria: "",
+      tipoCusto: "",
+      formaPagamento: "",
+      valor: "",
+    });
+    setCategoriaSelecionada("");
+    setSubCategoriaSelecionada("");
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setRegistro(prevState => ({
+    setRegistro((prevState) => ({
       ...prevState,
-      [name]: value
+      [name]: value,
     }));
   };
 
   const handleCategoriaChange = (e) => {
     const valorSelecionado = e.target.value;
     setCategoriaSelecionada(valorSelecionado);
-    setRegistro(prevState => ({
+    setRegistro((prevState) => ({
       ...prevState,
       categoria: valorSelecionado,
-      subCategoria: '' 
+      subCategoria: "",
     }));
   };
+
+  const subCategoriasFiltradas = subcategoria.filter(
+    (s) => s.idDaCategoria === parseInt(categoriaSelecionada)
+);
 
   const handleSubCategoriaChange = (e) => {
     const valorSelecionado = e.target.value;
     setSubCategoriaSelecionada(valorSelecionado);
-    setRegistro(prevState => ({
-     ...prevState,
-     subCategoria: valorSelecionado
+    setRegistro((prevState) => ({
+      ...prevState,
+      subCategoria: valorSelecionado,
     }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const { dtRegistro, valor } = registro;
-
-    if (!dtRegistro || !valor) {
-      toast.error("Por favor, preencha todos os campos obrigatórios.");
-      return;
-    }
-
-    try {
-      await dispatch(adicionarRegistro({
-        dtRegistro: registro.dtRegistro,
-        fluxo: registro.fluxo,
-        categoria: registro.categoria,
-        subCategoria: registro.subCategoria,
-        tipoCusto: registro.tipoCusto,
-        formaPagamento: registro.formaPagamento,
-        valor: registro.valor.replace("R$ ", "").replace(".", "").replace(",", ".")
-      }));
-
-      toast.success("Registro cadastrado com sucesso!");
-      setRegistro({
-        idRegistro: null,
-        dtRegistro: '',
-        fluxo: '',
-        categoria: '',
-        subCategoria: '',
-        tipoCusto: '',
-        formaPagamento: '',
-        valor: ''
-      });
-     
-      fechado();
-    } catch (error) {
-      toast.error("Erro ao cadastrar o registro: " + error.message);
-    }
+  const handleValorChange = (e) => {
+    let { value } = e.target;
+    value = value.replace(/\D/g, "");
+    value = parseFloat(value) / 100;
+    setRegistro((prevState) => ({
+      ...prevState,
+      valor: value,
+    }));
   };
 
-  const subcategoriasFiltradas = categoriaSelecionada
-  ? subcategoria.filter(sub => sub.idCategoria === categoriaSelecionada)
-  : [];
+  const handleSemRegistro = () => {
+    toast.warning("Por favor, preencha todos os campos obrigatórios.");
+  };
 
-  console.log(categoriaSelecionada);
-  console.log(subcategoriasFiltradas);
+
+
+ 
+
+  const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  const { dtRegistro, valor, fluxo, tipoCusto, categoria, subCategoria, formaPagamento } = registro;
+
+  if (!dtRegistro || !valor || !fluxo || !tipoCusto || !categoria || !subCategoria || !formaPagamento) {
+    handleSemRegistro();
+    return;
+  }
+
+
+  try {
+    const novoRegistro = {
+      dtRegistro: new Date(dtRegistro).toISOString(),
+      valorRegistro: parseFloat(valor),
+      idFluxo: parseInt(fluxo, 10),
+      idCategoria: parseInt(categoria, 10),
+      idSubcategoria: parseInt(subCategoria, 10),
+      idCusto: parseInt(tipoCusto, 10),
+      idFormaDePagamento: parseInt(formaPagamento, 10),
+    };
+
+    await adicionarRegistro(novoRegistro);
+    dispatch(registroActions.adicionarRegistroReducer(novoRegistro));
+    const registrosAtualizados = await listarRegistro();
+    dispatch(registroActions.carregarRegistrosReducer(registrosAtualizados));
+    toast.success("Registro adicionado com sucesso!");
+    limparRegistros();
+    fechado();
+  } catch (error) {
+    console.error("Erro ao adicionar o registro: ", error);
+    toast.error("Erro ao adicionar o registro: " + error.message);
+  }
+};
+
   if (!aberto) return null;
+
+  
 
   return (
     <>
@@ -215,7 +240,6 @@ const AdicionarRegistro = ({ aberto, fechado }) => {
           <Formulario onSubmit={handleSubmit}>
             <TituloModal>Adicionar Registro</TituloModal>
             <InputsContainer>
-
               <InputGroup>
                 <Label>Data:</Label>
                 <Input
@@ -234,7 +258,7 @@ const AdicionarRegistro = ({ aberto, fechado }) => {
                   value={registro.fluxo}
                 >
                   <ItemComboBox value="">Selecione um Tipo de Fluxo</ItemComboBox>
-                  {fluxo.map(f => (
+                  {fluxo.map((f) => (
                     <ItemComboBox key={f.id} value={f.id}>
                       {f.nome}
                     </ItemComboBox>
@@ -245,40 +269,40 @@ const AdicionarRegistro = ({ aberto, fechado }) => {
               <InputGroup>
                 <Label>Categoria:</Label>
                 <ComboBox
-                    onChange={handleCategoriaChange}
-                    value={registro.categoria}
+                  onChange={handleCategoriaChange}
+                  value={registro.categoria}
                 >
-                    <ItemComboBox value="">Selecione uma Categoria</ItemComboBox>
-                    {categoria.map(c => (
-                    <ItemComboBox 
-                    key={c.id} 
-                    value={c.id}
-                    >
-                        {c.nomeDaCategoria}
+                  <ItemComboBox value="">Selecione uma Categoria</ItemComboBox>
+                  {categoria.map((c) => (
+                    <ItemComboBox key={c.id} value={c.id}>
+                      {c.nomeDaCategoria}
                     </ItemComboBox>
-                    ))}
+                  ))}
                 </ComboBox>
-            </InputGroup>
+              </InputGroup>
 
-            <InputGroup>
+              <InputGroup>
                 <Label>Sub Categoria:</Label>
                 <ComboBox
-                    onChange={handleSubCategoriaChange}
-                    name="subCategoria"
-                    value={registro.subCategoria}
-                    disabled={!categoriaSelecionada}
+                  onChange={handleSubCategoriaChange}
+                  name="subCategoria"
+                  value={registro.subCategoria}
+                  disabled={!categoriaSelecionada}
                 >
-                     <ItemComboBox value="">Selecione uma Sub Categoria</ItemComboBox>
-                    {subcategoriasFiltradas.length > 0 ? (
-                        subcategoriasFiltradas.map(s => (
-                            <ItemComboBox key={s.idDaSubcategoria} value={s.idDaSubcategoria}>
-                                {s.nomeDaSubcategoria}
-                            </ItemComboBox>
-                        ))
-                    ) : null }
+                  <ItemComboBox value="">Selecione uma Sub Categoria</ItemComboBox>
+                  {subCategoriasFiltradas.length > 0
+                    ? subCategoriasFiltradas.map((s) => (
+                        <ItemComboBox
+                          key={s.idDaSubcategoria}
+                          value={s.idDaSubcategoria}
+                        >
+                          {s.nomeDaSubcategoria}
+                        </ItemComboBox>
+                      ))
+                    : null}
                 </ComboBox>
-            </InputGroup>
-                    
+              </InputGroup>
+
               <InputGroup>
                 <Label>Tipo Custo:</Label>
                 <ComboBox
@@ -287,11 +311,8 @@ const AdicionarRegistro = ({ aberto, fechado }) => {
                   value={registro.tipoCusto}
                 >
                   <ItemComboBox value="">Selecione um Tipo de Custo</ItemComboBox>
-                  {custo.map(c => (
-                    <ItemComboBox 
-                    key={c.id} 
-                    value={c.id}
-                    >
+                  {custo.map((c) => (
+                    <ItemComboBox key={c.id} value={c.id}>
                       {c.nome}
                     </ItemComboBox>
                   ))}
@@ -306,8 +327,7 @@ const AdicionarRegistro = ({ aberto, fechado }) => {
                   value={registro.formaPagamento}
                 >
                   <ItemComboBox value="">Selecione uma Forma de Pagamento</ItemComboBox>
-                  {
-                    formaDePagamento.map(f => (
+                  {formaDePagamento.map((f) => (
                     <ItemComboBox key={f.id} value={f.id}>
                       {f.nome}
                     </ItemComboBox>
@@ -320,31 +340,23 @@ const AdicionarRegistro = ({ aberto, fechado }) => {
                 <InputMask
                   id="valor"
                   name="valor"
-                  mask="R$ 999.999.999,99"
                   className="border-2 border-custom-blue p-2 rounded w-1/2 text-black"
-                  value={registro.valor}
-                  onChange={handleChange}
+                  value={registro.valor ? registro.valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) : ''}
+                  onChange={handleValorChange}
                 />
               </InputGroup>
-
             </InputsContainer>
             <BotaoContainer>
-              <BotaoPrincipal type="submit" className="px-6 py-3 text-base font-medium">
+              <BotaoPrincipal
+                type="submit"
+                className="px-6 py-3 text-base font-medium"
+              >
                 Cadastrar
               </BotaoPrincipal>
               <BotaoPrincipal
                 type="button"
                 className="px-6 py-3 text-base font-medium"
-                onClick={() => setRegistro({
-                  idRegistro: null,
-                  dtRegistro: '',
-                  fluxo: '',
-                  categoria: '',
-                  subCategoria: '',
-                  tipoCusto: '',
-                  formaPagamento: '',
-                  valor: ''
-                })}
+                onClick={limparRegistros}
               >
                 Limpar
               </BotaoPrincipal>
@@ -358,7 +370,3 @@ const AdicionarRegistro = ({ aberto, fechado }) => {
 };
 
 export default AdicionarRegistro;
-
-
-
-

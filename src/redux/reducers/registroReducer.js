@@ -84,17 +84,9 @@ const registroReducer = (state = initialState, action) => {
   }
 };
 
-export const adicionarRegistroReducer = (registro) => ({
+export const adicionarRegistroReducer = (registros) => ({
   type: TypesRegistro.ADICIONAR_REGISTRO_REDUCER,
-  payload: {
-      idRegistro: registro.idRegistro,
-      dtRegistro: registro.dtRegistro,
-      idCategoria: registro.idCategoria,
-      idSubcategoria: registro.idSubcategoria,
-      idCusto: registro.idCusto,
-      idFormaDePagamento: registro.idFormaDePagamento,
-      valorRegistro: registro.valorRegistro
-  },
+  payload: registros
 });
 
 export const carregarRegistrosReducer = (registros) => ({

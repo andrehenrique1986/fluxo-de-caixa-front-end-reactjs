@@ -2,7 +2,7 @@ const TypesFluxo = {
     
     CARREGAR_FLUXOS_REDUCER: 'CARREGAR_FLUXOS_REDUCER',
     CARREGAR_FLUXO_POR_ID_REDUCER: 'CARREGAR_FLUXO_POR_ID_REDUCER', 
-    
+    ERRO_FLUXOS_REDUCER: "ERRO_FLUXOS_REDUCER",
   };
   
   const initialState = {
@@ -26,7 +26,11 @@ const TypesFluxo = {
           ...state,
           fluxoPorId: action.payload
         };
-        
+      case TypesFluxo.ERRO_FLUXOS_REDUCER:
+        return {
+          ...state,
+          error: action.payload
+        }
     
       default:
         return state;
@@ -45,11 +49,15 @@ const TypesFluxo = {
     payload: fluxoPorId
   });
   
+  const erroFluxoReducer = (error) => ({
+    type: TypesFluxo.ERRO_FLUXOS_REDUCER,
+    payload: error,
+  });
   
-  
-  export const subcategoriaActions = {
+  export const fluxoActions = {
     carregarFluxosReducer,
     carregarFluxoPorIdReducer,
+    erroFluxoReducer
   };
   
   export default fluxoReducer;

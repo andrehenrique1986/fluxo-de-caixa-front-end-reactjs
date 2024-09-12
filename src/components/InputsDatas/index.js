@@ -3,6 +3,10 @@ import styled from 'styled-components';
 import tw from 'twin.macro';
 import BotaoPrincipal from '../BotaoPrincipal';
 import AdicionarRegistro from '../Modais/ModalRegistro/AdicionarRegistro';
+import { registroActions } from '../../redux/reducers/registroReducer';
+import { useDispatch } from 'react-redux';
+import { toast } from 'react-toastify';
+
 
 
 const Container = styled.div`
@@ -68,10 +72,43 @@ const ButtonsContainer = styled.div`
 
 const InputsDatas = () => {
 
+  const dispatch = useDispatch();  
   const [modalAdicionarRegistro, setModalAdicionarRegistro] = useState(false);
+  const [registro, setRegistro] = useState({
+    idRegistro: null,
+    dtRegistro: "",
+    tipoFluxo: "",
+    categoria: "",
+    subCategoria: "",
+    tipoCusto: "",
+    formaPagamento: "",
+    valor: "",
+  });
 
    const abrirModalAdicionarRegistro = () => setModalAdicionarRegistro(true);
    const fecharModalAdicionarRegistro = () => setModalAdicionarRegistro(false);
+
+
+   const limparRegistros = () => {
+    setRegistro({
+      idRegistro: null,
+      dtRegistro: "",
+      fluxo: "",
+      categoria: "",
+      subCategoria: "",
+      tipoCusto: "",
+      formaPagamento: "",
+      valor: "",
+    });
+  };
+
+  const handleSuccessNovoRegistro = (novoRegistro) => {
+    dispatch(registroActions.adicionarRegistroReducer(novoRegistro));
+  };
+
+  const handleErrorRegistro = (erro) => {
+    toast.error("Erro ao adicionar um novo registro: " + erro.message);
+  };
 
   return (
     <Container>
@@ -87,6 +124,9 @@ const InputsDatas = () => {
             <AdicionarRegistro 
             aberto={modalAdicionarRegistro}
             fechado={fecharModalAdicionarRegistro} 
+            limparRegistros={limparRegistros}
+            onSuccess={handleSuccessNovoRegistro}
+            onError={handleErrorRegistro}
             />
           </ButtonsContainer>
         </InputsAndButtonsContainer>

@@ -4,7 +4,7 @@ const API_BASE_URL = "https://localhost:44374/Registro/";
 
 const api = axios.create({
   baseURL: API_BASE_URL,
-  timeout: 2000,
+  timeout: 10000,
   headers: {
     "Content-Type": "application/json",
   },
@@ -12,10 +12,11 @@ const api = axios.create({
 
 export const adicionarRegistro = async (registro) => {
     try {
-       const response = await api.post('api/aadicionarRegistro', registro);
+       const response = await api.post('api/adicionarRegistro', registro);
        return response.data; 
     } catch (error) {
         console.error('Erro ao adicionar registro', error);
+        throw error;
     }
 }
 
@@ -24,7 +25,7 @@ export const listarRegistro = async () => {
       const response = await api.get("api/recuperarRegistro");
       return response.data;
     } catch (error) {
-      console.error("Erro ao listar as subcategorias");
+      console.error("Erro ao listar os registros");
       throw error;
     }
   };
