@@ -22,6 +22,7 @@ const initialState = {
 };
 
 const registroReducer = (state = initialState, action) => {
+   console.log('Ação recebida:', action);
   switch (action.type) {
     case TypesRegistro.ADICIONAR_REGISTRO_REDUCER:
       return {
@@ -84,9 +85,18 @@ const registroReducer = (state = initialState, action) => {
   }
 };
 
-export const adicionarRegistroReducer = (registros) => ({
+export const adicionarRegistroReducer = (registro) => ({
   type: TypesRegistro.ADICIONAR_REGISTRO_REDUCER,
-  payload: registros
+  payload: {
+    idRegistro: registro.idRegistro,
+    idFluxo: registro.idFluxo,
+    idCategoria: registro.idCategoria, 
+    idSubcategoria: registro.idSubcategoria, 
+    idCusto: registro.idCusto, 
+    idFormaDePagamento: registro.idFormaDePagamento,
+    dtRegistro: registro.dtRegistro,
+    valorRegistro: registro.valorRegistro,
+  }
 });
 
 export const carregarRegistrosReducer = (registros) => ({
@@ -103,12 +113,13 @@ export const atualizarRegistroReducer = (registro) => ({
   type: TypesRegistro.ATUALIZAR_REGISTRO_REDUCER,
   payload: {
       idRegistro: registro.idRegistro,
-      dtRegistro: registro.dtRegistro,
-      idCategoria: registro.idCategoria,
-      idSubcategoria: registro.idSubcategoria,
-      idCusto: registro.idCusto,
+      idFluxo: registro.idFluxo,
+      idCategoria: registro.idCategoria, 
+      idSubcategoria: registro.idSubcategoria, 
+      idCusto: registro.idCusto, 
       idFormaDePagamento: registro.idFormaDePagamento,
-      valorRegistro: registro.valorRegistro
+      dtRegistro: registro.dtRegistro,
+      valorRegistro: registro.valorRegistro,
   },
 });
 

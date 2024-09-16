@@ -5,8 +5,8 @@ import BotaoPrincipal from '../BotaoPrincipal';
 import AdicionarRegistro from '../Modais/ModalRegistro/AdicionarRegistro';
 import { registroActions } from '../../redux/reducers/registroReducer';
 import { useDispatch } from 'react-redux';
-import { toast } from 'react-toastify';
-
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 const Container = styled.div`
@@ -104,6 +104,7 @@ const InputsDatas = () => {
 
   const handleSuccessNovoRegistro = (novoRegistro) => {
     dispatch(registroActions.adicionarRegistroReducer(novoRegistro));
+    toast.success("Registro adicionado com sucesso!");
   };
 
   const handleErrorRegistro = (erro) => {
@@ -131,6 +132,7 @@ const InputsDatas = () => {
           </ButtonsContainer>
         </InputsAndButtonsContainer>
       </InputsEBotaoContainer>
+      <ToastContainer />
     </Container>
   );
 };

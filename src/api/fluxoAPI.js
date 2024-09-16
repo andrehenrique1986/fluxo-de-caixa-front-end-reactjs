@@ -27,6 +27,7 @@ export const listarFluxoPorId = async (id) => {
     return response.data;
   } catch (error) {
     console.error("Erro ao listar os tipos de fluxo pelo ID", error);
+    throw error;
   }
 };
 

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import tw from "twin.macro";
 import styled from "styled-components";
 import { BsFillPencilFill } from "react-icons/bs";
@@ -6,33 +6,22 @@ import { FaTrashAlt } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { listarRegistro } from "../../api/registroAPI";
 import { registroActions } from "../../redux/reducers/registroReducer";
+import AdicionarRegistro from "../../components/Modais/ModalRegistro/AdicionarRegistro";
+import { toast } from "react-toastify";
 
 
 
 const formatarData = (data) => {
-   if(typeof data === 'string'){
+   if (typeof data === 'string') {
      const [ano, mes, dia] = data.split('-');
      return `${dia.substring(0, 2)}/${mes}/${ano}`;
    } else {
-    console.error("Erro:", data);
+    console.error("Erro ao formatar data:", data);
    }
-};
-
-const formatarMoeda = (valor) => {
-  
-  if (typeof valor !== 'number' || isNaN(valor) || !isFinite(valor)) {
-    console.error("Erro:", valor);
-    return 'Valor Inválido';
-  }
-
-  return valor.toLocaleString('pt-BR', {
-    style: 'currency',
-    currency: 'BRL',
-  });
-};
+}; 
 
 const Container = styled.div`
-  ${tw`p-5 bg-gray-100 mt-1 flex justify-center`}
+  ${tw`p-5 bg-gray-100 mt-1 flex justify-center max-h-[500px] overflow-y-auto`}
 `;
 
 const Tabela = styled.table`
@@ -54,25 +43,20 @@ const CelulaTabela = styled.td`
 const CorpoTabela = styled.tbody``;
 
 const Icone = styled.div`
-  ${tw`cursor-pointer text-gray-600 hover:text-gray-800`}
+  ${tw`cursor-pointer text-gray-600 hover:text-gray-800 text-xl flex justify-center items-center`}
   font-size: 1.2rem;
   display: flex;
   justify-content: center;
   align-items: center;
 `;
 
-const DivErro = styled.div`
-${tw`text-red-600 
-     font-bold`}
-`;
 
 const Painel = () => {
   const dispatch = useDispatch();
-  const registros = useSelector(state => state.registros.registros || []); 
-  //const erroRegistros = useSelector((state) => state.registros.error);
+  const registros = useSelector(state => state.registros.registros || []);
+  const [modalAdicionarRegistro, setModalAdicionarRegistro] = useState(false);
 
-
- 
+  const fecharModalAdicionarRegistro = () => setModalAdicionarRegistro(false);
 
   useEffect(() => {
     const listarRegistros = async () => {
@@ -80,15 +64,15 @@ const Painel = () => {
         const data = await listarRegistro();
         dispatch(registroActions.carregarRegistrosReducer(data));
       } catch (error) {
-        dispatch(registroActions.erroRegistroReducer("Erro ao carregar os registros:", error.message));
+        dispatch(registroActions.erroRegistroReducer(`Erro ao carregar os registros: ${error.message}`));
       }
     };
 
     listarRegistros();
   }, [dispatch]);
 
+ 
 
-  
   return (
     <Container>
       <Tabela>
@@ -117,9 +101,15 @@ const Painel = () => {
                 <CelulaTabela>{registro.subcategoriaNome}</CelulaTabela>
                 <CelulaTabela>{registro.tipoDeCusto}</CelulaTabela>
                 <CelulaTabela>{registro.formaDePagamento}</CelulaTabela>
-                <CelulaTabela>{formatarMoeda(registro.valor)}</CelulaTabela>
-                <CelulaTabela><Icone><BsFillPencilFill className="text-gray-500" /></Icone></CelulaTabela>
-                <CelulaTabela><Icone><FaTrashAlt className="text-red-600" /></Icone></CelulaTabela>
+                <CelulaTabela>
+                  {registro.valor?.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+                </CelulaTabela>
+                <CelulaTabela>
+                  <Icone><BsFillPencilFill className="text-gray-500" /></Icone>
+                </CelulaTabela>
+                <CelulaTabela>
+                  <Icone><FaTrashAlt className="text-red-600" /></Icone>
+                </CelulaTabela>
               </LinhaTabela>
             ))
           ) : (
@@ -134,6 +124,8 @@ const Painel = () => {
 };
 
 export default Painel;
+
+
 
 
 

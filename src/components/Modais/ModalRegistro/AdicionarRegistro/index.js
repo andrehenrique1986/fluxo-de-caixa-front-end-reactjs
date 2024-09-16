@@ -12,8 +12,7 @@ import { listarCusto } from "../../../../api/custoAPI";
 import { listarFluxo } from "../../../../api/fluxoAPI";
 import BotaoPrincipal from "../../../BotaoPrincipal";
 import { registroActions } from "../../../../redux/reducers/registroReducer";
-
-
+import 'react-toastify/dist/ReactToastify.css';
 
 const SobreposicaoModal = styled.div`
   ${tw`fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50`}
@@ -149,7 +148,7 @@ const AdicionarRegistro = ({ aberto, fechado }) => {
 
   const subCategoriasFiltradas = subcategoria.filter(
     (s) => s.idDaCategoria === parseInt(categoriaSelecionada)
-);
+  );
 
   const handleSubCategoriaChange = (e) => {
     const valorSelecionado = e.target.value;
@@ -174,48 +173,39 @@ const AdicionarRegistro = ({ aberto, fechado }) => {
     toast.warning("Por favor, preencha todos os campos obrigatórios.");
   };
 
-
-
- 
-
   const handleSubmit = async (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  const { dtRegistro, valor, fluxo, tipoCusto, categoria, subCategoria, formaPagamento } = registro;
+    const { dtRegistro, valor, fluxo, tipoCusto, categoria, subCategoria, formaPagamento } = registro;
 
-  if (!dtRegistro || !valor || !fluxo || !tipoCusto || !categoria || !subCategoria || !formaPagamento) {
-    handleSemRegistro();
-    return;
-  }
+    if (!dtRegistro || !valor || !fluxo || !tipoCusto || !categoria || !subCategoria || !formaPagamento) {
+      handleSemRegistro();
+      return;
+    }
 
+    try {
+      const novoRegistro = {
+        dtRegistro: new Date(dtRegistro),
+        valorRegistro: parseFloat(valor),
+        idFluxo: parseInt(fluxo, 10),
+        idCategoria: parseInt(categoria, 10),
+        idSubcategoria: parseInt(subCategoria, 10) || 0,
+        idCusto: parseInt(tipoCusto, 10),
+        idFormaDePagamento: parseInt(formaPagamento, 10),
+      };
 
-  try {
-    const novoRegistro = {
-      dtRegistro: new Date(dtRegistro).toISOString(),
-      valorRegistro: parseFloat(valor),
-      idFluxo: parseInt(fluxo, 10),
-      idCategoria: parseInt(categoria, 10),
-      idSubcategoria: parseInt(subCategoria, 10),
-      idCusto: parseInt(tipoCusto, 10),
-      idFormaDePagamento: parseInt(formaPagamento, 10),
-    };
+      await adicionarRegistro(novoRegistro);
+      dispatch(registroActions.adicionarRegistroReducer(novoRegistro));
 
-    await adicionarRegistro(novoRegistro);
-    dispatch(registroActions.adicionarRegistroReducer(novoRegistro));
-    const registrosAtualizados = await listarRegistro();
-    dispatch(registroActions.carregarRegistrosReducer(registrosAtualizados));
-    toast.success("Registro adicionado com sucesso!");
-    limparRegistros();
-    fechado();
-  } catch (error) {
-    console.error("Erro ao adicionar o registro: ", error);
-    toast.error("Erro ao adicionar o registro: " + error.message);
-  }
-};
+      const registrosAtualizados = await listarRegistro();
+      dispatch(registroActions.carregarRegistrosReducer(registrosAtualizados));
+      toast.success("Registro adicionado com sucesso!");
+    } catch (error) {
+      toast.error("Erro ao adicionar o registro: " + error.message);
+    }
+  };
 
   if (!aberto) return null;
-
-  
 
   return (
     <>
@@ -362,10 +352,12 @@ const AdicionarRegistro = ({ aberto, fechado }) => {
               </BotaoPrincipal>
             </BotaoContainer>
           </Formulario>
+          <ToastContainer />
         </ConteudoModal>
       </SobreposicaoModal>
-      <ToastContainer />
+      
     </>
+    
   );
 };
 

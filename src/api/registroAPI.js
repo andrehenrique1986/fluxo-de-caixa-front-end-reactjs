@@ -4,7 +4,7 @@ const API_BASE_URL = "https://localhost:44374/Registro/";
 
 const api = axios.create({
   baseURL: API_BASE_URL,
-  timeout: 10000,
+  timeout: 30000,
   headers: {
     "Content-Type": "application/json",
   },
@@ -36,6 +36,7 @@ export const listarRegistro = async () => {
       return response.data;
     } catch (error) {
       console.error("Erro ao listar os registros pelo ID", error);
+      throw error;
     }
   };
   
@@ -45,6 +46,7 @@ export const listarRegistro = async () => {
       return response.data;
     } catch (error) {
       console.error("Erro ao atualizar o registro", error);
+      throw error;
     }
   };
   
@@ -54,6 +56,7 @@ export const listarRegistro = async () => {
       return response.data;
     } catch (error) {
       console.error("Erro ao excluir o registro", error);
+      throw error;
     }
   };
 
@@ -63,6 +66,7 @@ export const listarRegistro = async () => {
         return response.data;
     } catch (error) {
         console.error("Erro ao realizar o cálculo", error);
+        throw error;
     }
   }
 
@@ -73,6 +77,7 @@ export const listarRegistro = async () => {
         return response.data;
     } catch (error) {
         console.error("Erro ao realizar o cálculo", error);
+        throw error;
     }
   }
 
@@ -83,6 +88,7 @@ export const listarRegistro = async () => {
         return response.data;
     } catch (error) {
         console.error("Erro ao realizar o cálculo", error);
+        throw error;
     }
   }
 
@@ -92,6 +98,7 @@ export const listarRegistro = async () => {
         return response.data;
     } catch (error) {
         console.error("Erro ao realizar o cálculo", error);
+        throw error;
     }
   }
 
@@ -101,6 +108,7 @@ export const listarRegistro = async () => {
         return response.data;
     } catch (error) {
         console.error("Erro ao realizar o cálculo", error);
+        throw error;
     }
   }
 

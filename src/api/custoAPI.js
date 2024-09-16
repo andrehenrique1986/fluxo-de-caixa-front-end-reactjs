@@ -27,5 +27,6 @@ export const listarCustoPorId = async (id) => {
     return response.data;
   } catch (error) {
     console.error("Erro ao listar os tipos de custo pelo ID", error);
+    throw error;
   }
 };
