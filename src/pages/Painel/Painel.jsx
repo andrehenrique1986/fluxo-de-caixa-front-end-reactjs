@@ -7,21 +7,21 @@ import { useDispatch, useSelector } from "react-redux";
 import { listarRegistro } from "../../api/registroAPI";
 import { registroActions } from "../../redux/reducers/registroReducer";
 import AtualizarRegistro from "../../components/Modais/ModalRegistro/AtualizarRegistro";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import ExcluirRegistro from "../../components/Modais/ModalRegistro";
+import 'react-toastify/dist/ReactToastify.css';
 
 const formatarData = (data) => {
   if (typeof data === 'string') {
     const [ano, mes, dia] = data.split('-');
     return `${dia.substring(0, 2)}/${mes}/${ano}`;
-  } else {
-    console.error("Erro ao formatar data:", data);
   }
+  console.error("Erro ao formatar data:", data);
 };
 
 const Container = styled.div`
   ${tw`p-5 bg-gray-100 mt-1 flex justify-center max-h-[500px] overflow-x-auto`}
-
+  
   @media (max-width: 768px) {
     ${tw`p-2`}
   }
@@ -29,7 +29,7 @@ const Container = styled.div`
 
 const Tabela = styled.table`
   ${tw`w-full border-collapse text-center`}
-
+  
   @media (max-width: 768px) {
     ${tw`min-w-[600px]`}
   }
@@ -45,7 +45,7 @@ const LinhaTabela = styled.tr`
 
 const CelulaTabela = styled.td`
   ${tw`p-2 text-center`}
-
+  
   @media (max-width: 768px) {
     ${tw`text-xs p-1`}
   }
@@ -55,7 +55,7 @@ const CorpoTabela = styled.tbody``;
 
 const Icone = styled.div`
   ${tw`cursor-pointer text-gray-600 hover:text-gray-800 text-xl flex justify-center items-center`}
-
+  
   @media (max-width: 768px) {
     ${tw`text-lg`}
   }
@@ -68,42 +68,43 @@ const Painel = () => {
   const [modalAtualizarRegistro, setModalAtualizarRegistro] = useState(false);
   const [modalExcluirRegistro, setModalExcluirRegistro] = useState(false);
   const [registroAtual, setRegistroAtual] = useState(null);
+  const [registrosCarregados, setRegistrosCarregados] = useState(true);
 
   const abrirModalAtualizarRegistro = (registro) => {
     setRegistroAtual(registro);
     setModalAtualizarRegistro(true);
-  }
+  };
 
   const fecharModalAtualizarRegistro = () => {
     setModalAtualizarRegistro(false);
     setRegistroAtual(null);
-  }
+  };
 
   const abrirModalExcluirRegistro = (registro) => {
     setRegistroAtual(registro);
     setModalExcluirRegistro(true);
-  }
+  };
 
   const fecharModalExcluirRegistro = () => {
     setModalExcluirRegistro(false);
     setRegistroAtual(null);
-  }
-
+  };
 
   useEffect(() => {
     const listarRegistros = async () => {
+      setRegistrosCarregados(true);
       try {
         const data = await listarRegistro();
         dispatch(registroActions.carregarRegistrosReducer(data));
       } catch (error) {
         dispatch(registroActions.erroRegistroReducer(`Erro ao carregar os registros: ${error.message}`));
+      } finally {
+        setRegistrosCarregados(false);
       }
     };
 
     listarRegistros();
   }, [dispatch]);
-
-
 
   const handleSuccessAtualizarRegistro = (registro, registroAtualizado) => {
     if (registroAtualizado) {
@@ -114,18 +115,24 @@ const Painel = () => {
   };
 
   const handleErrorAtualizarRegistro = (erro) => {
-    toast.error("Erro ao atualizar uma registro: " + erro.message);
+    toast.error("Erro ao atualizar o registro: " + erro.message);
   };
 
-
   const handleErrorExcluirRegistro = (erro) => {
-    toast.error("Erro ao excluir uma registro: " + erro.message);
+    toast.error("Erro ao excluir o registro: " + erro.message);
   };
 
   const handleSuccessExcluirRegistro = (registro, registroExcluido) => {
     if (registroExcluido) {
+      
       dispatch(registroActions.excluirRegistroReducer(registro));
       toast.success("Registro excluído com sucesso!");
+  
+      if (registros.length === 1) {
+        dispatch(registroActions.carregarRegistrosReducer([]));
+      }
+    } else {
+      console.error("Erro ao excluir registro."); 
     }
     setModalExcluirRegistro(false);
   };
@@ -143,29 +150,33 @@ const Painel = () => {
     subCategoriaSelecionada: registroAtual.subcategoriaNome,
     custoSelecionado: registroAtual.tipoDeCusto,
     formaDePagamentoSelecionada: registroAtual.formaDePagamento,
-    valorEscolhido: registroAtual.valor
-  } : {} ;
+    valorEscolhido: registroAtual.valor,
+  } : {};
 
   return (
     <Container>
-      <Tabela>
-        <CabecalhoTabela>
-          <LinhaTabela>
-            <CelulaTabela>Id</CelulaTabela>
-            <CelulaTabela>Data</CelulaTabela>
-            <CelulaTabela>Fluxo</CelulaTabela>
-            <CelulaTabela>Categoria</CelulaTabela>
-            <CelulaTabela>Sub Categoria</CelulaTabela>
-            <CelulaTabela>Tipo Custo</CelulaTabela>
-            <CelulaTabela>Forma Pagamento</CelulaTabela>
-            <CelulaTabela>Valor</CelulaTabela>
-            <CelulaTabela></CelulaTabela>
-            <CelulaTabela></CelulaTabela>
-          </LinhaTabela>
-        </CabecalhoTabela>
-        <CorpoTabela>
-          {registros.length > 0 ? (
-            registros.map(registro => (
+      {registrosCarregados ? (
+        <CelulaTabela colSpan="10">Carregando registros...</CelulaTabela>
+      ) : registros.length === 0 ? (
+        <CelulaTabela colSpan="10">Nenhum registro encontrado!</CelulaTabela>
+      ) : (
+        <Tabela>
+          <CabecalhoTabela>
+            <LinhaTabela>
+              <CelulaTabela>Id</CelulaTabela>
+              <CelulaTabela>Data</CelulaTabela>
+              <CelulaTabela>Fluxo</CelulaTabela>
+              <CelulaTabela>Categoria</CelulaTabela>
+              <CelulaTabela>Sub Categoria</CelulaTabela>
+              <CelulaTabela>Tipo Custo</CelulaTabela>
+              <CelulaTabela>Forma Pagamento</CelulaTabela>
+              <CelulaTabela>Valor</CelulaTabela>
+              <CelulaTabela></CelulaTabela>
+              <CelulaTabela></CelulaTabela>
+            </LinhaTabela>
+          </CabecalhoTabela>
+          <CorpoTabela>
+            {registros.map(registro => (
               <LinhaTabela key={registro.id}>
                 <CelulaTabela>{registro.id}</CelulaTabela>
                 <CelulaTabela>{formatarData(registro.dataRegistro)}</CelulaTabela>
@@ -183,17 +194,16 @@ const Painel = () => {
                   </Icone>
                 </CelulaTabela>
                 <CelulaTabela>
-                  <Icone onClick={() => abrirModalExcluirRegistro(registro)}><FaTrashAlt className="text-red-600" /></Icone>
+                  <Icone onClick={() => abrirModalExcluirRegistro(registro)}>
+                    <FaTrashAlt className="text-red-600" />
+                  </Icone>
                 </CelulaTabela>
               </LinhaTabela>
-            ))
-          ) : (
-            <LinhaTabela>
-              <CelulaTabela colSpan="10">Nenhum registro encontrado</CelulaTabela>
-            </LinhaTabela>
-          )}
-        </CorpoTabela>
-      </Tabela>
+            ))}
+          </CorpoTabela>
+          
+        </Tabela>
+      )}
       {registroAtual && (
         <AtualizarRegistro
           aberto={modalAtualizarRegistro}
@@ -203,19 +213,26 @@ const Painel = () => {
           onError={handleErrorAtualizarRegistro}
         />
       )}
-      
-      <ExcluirRegistro 
+      { modalExcluirRegistro && (
+        <ExcluirRegistro 
         aberto={modalExcluirRegistro}
         fechado={fecharModalExcluirRegistro}
         {...registroProps}
         onSuccess={handleSuccessExcluirRegistro}
         onError={handleErrorExcluirRegistro}
       />
+      )
+
+      }
+      
+     <ToastContainer /> 
     </Container>
   );
 };
 
 export default Painel;
+
+
 
 
 
