@@ -40,9 +40,9 @@ export const listarRegistro = async () => {
     }
   };
   
-  export const atualizarRegistro = async (id, registro) => {
+  export const atualizarRegistro = async (registro) => {
     try {
-      const response = await api.put(`api/atualizarRegistro/${id}`, registro);
+      const response = await api.put(`api/atualizarRegistro/${registro.idRegistro}`, registro);
       return response.data;
     } catch (error) {
       console.error("Erro ao atualizar o registro", error);

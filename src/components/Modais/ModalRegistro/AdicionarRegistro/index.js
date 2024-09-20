@@ -14,6 +14,7 @@ import BotaoPrincipal from "../../../BotaoPrincipal";
 import { registroActions } from "../../../../redux/reducers/registroReducer";
 import 'react-toastify/dist/ReactToastify.css';
 
+// Styled Components
 const SobreposicaoModal = styled.div`
   ${tw`fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50`}
 `;
@@ -30,8 +31,8 @@ const Formulario = styled.form`
   ${tw`flex flex-col space-y-4`}
 `;
 
-const TituloModal = styled.h2`
-  ${tw`text-center text-lg font-bold mb-2 text-black`}
+const TituloModal = styled.h1`
+  ${tw`text-2xl mb-4 text-center`}
 `;
 
 const InputsContainer = styled.div`
@@ -47,11 +48,11 @@ const Label = styled.label`
 `;
 
 const Input = styled.input`
-  ${tw`border-2 border-custom-blue p-2 rounded w-1/2 text-black`}
+  ${tw`border-2 border-custom-blue p-2 rounded w-3/4 text-black`}
 `;
 
 const ComboBox = styled.select`
-  ${tw`border-2 border-custom-blue p-2 rounded w-1/2 text-black`}
+  ${tw`border-2 border-custom-blue p-2 rounded w-3/4 text-black`}
 `;
 
 const ItemComboBox = styled.option``;
@@ -59,6 +60,21 @@ const ItemComboBox = styled.option``;
 const BotaoContainer = styled.div`
   ${tw`flex justify-center items-center space-x-4 mt-4`}
 `;
+
+const formatDateToDisplay = (dateStr) => {
+  const date = new Date(dateStr);
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const year = date.getFullYear();
+  return `${day}/${month}/${year}`;
+};
+
+
+const formatDateForInput = (dateStr) => {
+  const [day, month, year] = dateStr.split('/');
+  return `${year}-${month}-${day}`;
+};
+
 
 const AdicionarRegistro = ({ aberto, fechado }) => {
   const dispatch = useDispatch();
@@ -88,6 +104,7 @@ const AdicionarRegistro = ({ aberto, fechado }) => {
     }
   }, [aberto]);
 
+
   const fetchData = async () => {
     try {
       const [
@@ -114,9 +131,10 @@ const AdicionarRegistro = ({ aberto, fechado }) => {
   };
 
   const limparRegistros = () => {
+    
     setRegistro({
       idRegistro: null,
-      dtRegistro: "",
+      dtRegistro: Date.now(),
       fluxo: "",
       categoria: "",
       subCategoria: "",
@@ -130,10 +148,18 @@ const AdicionarRegistro = ({ aberto, fechado }) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setRegistro((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
+    if (name === 'dtRegistro') {
+      setRegistro((prevState) => ({
+        ...prevState,
+        [name]: value,
+        dtRegistro: formatDateToDisplay(formatDateForInput(value)),
+      }));
+    } else {
+      setRegistro((prevState) => ({
+        ...prevState,
+        [name]: value,
+      }));
+    }
   };
 
   const handleCategoriaChange = (e) => {
@@ -176,7 +202,7 @@ const AdicionarRegistro = ({ aberto, fechado }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const { dtRegistro, valor, fluxo, tipoCusto, categoria, subCategoria, formaPagamento } = registro;
+    const { dtRegistro, valor, fluxo, tipoCusto, categoria, subCategoria ,formaPagamento } = registro;
 
     if (!dtRegistro || !valor || !fluxo || !tipoCusto || !categoria || !subCategoria || !formaPagamento) {
       handleSemRegistro();
@@ -185,7 +211,7 @@ const AdicionarRegistro = ({ aberto, fechado }) => {
 
     try {
       const novoRegistro = {
-        dtRegistro: new Date(dtRegistro),
+        dtRegistro: new Date(Date.now()),
         valorRegistro: parseFloat(valor),
         idFluxo: parseInt(fluxo, 10),
         idCategoria: parseInt(categoria, 10),
@@ -196,16 +222,20 @@ const AdicionarRegistro = ({ aberto, fechado }) => {
 
       await adicionarRegistro(novoRegistro);
       dispatch(registroActions.adicionarRegistroReducer(novoRegistro));
-
+      console.log(novoRegistro);
       const registrosAtualizados = await listarRegistro();
       dispatch(registroActions.carregarRegistrosReducer(registrosAtualizados));
-      toast.success("Registro adicionado com sucesso!");
+      const dataFormatada = formatDateToDisplay(novoRegistro.dtRegistro);
+      toast.success(`Registro adicionado com sucesso! Adicionado em: ${dataFormatada}`);
     } catch (error) {
       toast.error("Erro ao adicionar o registro: " + error.message);
     }
   };
 
+  console.log(registro);
   if (!aberto) return null;
+
+ 
 
   return (
     <>
@@ -230,16 +260,6 @@ const AdicionarRegistro = ({ aberto, fechado }) => {
           <Formulario onSubmit={handleSubmit}>
             <TituloModal>Adicionar Registro</TituloModal>
             <InputsContainer>
-              <InputGroup>
-                <Label>Data:</Label>
-                <Input
-                  type="date"
-                  name="dtRegistro"
-                  value={registro.dtRegistro}
-                  onChange={handleChange}
-                />
-              </InputGroup>
-
               <InputGroup>
                 <Label>Tipo de Fluxo:</Label>
                 <ComboBox
@@ -294,7 +314,7 @@ const AdicionarRegistro = ({ aberto, fechado }) => {
               </InputGroup>
 
               <InputGroup>
-                <Label>Tipo Custo:</Label>
+                <Label>Tipo de Custo:</Label>
                 <ComboBox
                   onChange={handleChange}
                   name="tipoCusto"
@@ -330,7 +350,7 @@ const AdicionarRegistro = ({ aberto, fechado }) => {
                 <InputMask
                   id="valor"
                   name="valor"
-                  className="border-2 border-custom-blue p-2 rounded w-1/2 text-black"
+                  className="border-2 border-custom-blue p-2 rounded w-3/4 text-black"
                   value={registro.valor ? registro.valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) : ''}
                   onChange={handleValorChange}
                 />
@@ -355,10 +375,9 @@ const AdicionarRegistro = ({ aberto, fechado }) => {
           <ToastContainer />
         </ConteudoModal>
       </SobreposicaoModal>
-      
     </>
-    
   );
 };
 
 export default AdicionarRegistro;
+

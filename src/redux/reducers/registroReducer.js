@@ -3,6 +3,7 @@ const TypesRegistro = {
   CARREGAR_REGISTRO_REDUCER: 'CARREGAR_REGISTRO_REDUCER',
   CARREGAR_REGISTRO_POR_ID_REDUCER: 'CARREGAR_REGISTRO_POR_ID_REDUCER', 
   ATUALIZAR_REGISTRO_REDUCER: 'ATUALIZAR_REGISTRO_REDUCER',
+  SET_REGISTRO_ATUAL_REDUCER: "SET_REGISTRO_ATUAL_REDUCER",
   EXCLUIR_REGISTRO_REDUCER: 'EXCLUIR_REGISTRO_REDUCER',
   CALC_GASTOS_POR_CATEGORIA_REDUCER: 'CALC_GASTOS_POR_CATEGORIA_REDUCER',
   CALC_REGISTRO_POR_FORMA_PGTO_REDUCER: 'CALC_REGISTRO_POR_FORMA_PGTO_REDUCER',
@@ -18,7 +19,8 @@ const initialState = {
   gastosPorCategoria: null,
   registroPorFormaDePagamento: null,
   porcentagemPorCusto: null,
-  registroPorFluxo: null
+  registroPorFluxo: null,
+  registroAtual: null
 };
 
 const registroReducer = (state = initialState, action) => {
@@ -32,7 +34,7 @@ const registroReducer = (state = initialState, action) => {
     case TypesRegistro.CARREGAR_REGISTRO_REDUCER:
       return {
         ...state,
-        registros: action.payload, // Usando 'payload' corretamente
+        registros: action.payload, 
       };
     case TypesRegistro.CARREGAR_REGISTRO_POR_ID_REDUCER:
       return {
@@ -42,19 +44,30 @@ const registroReducer = (state = initialState, action) => {
     case TypesRegistro.ATUALIZAR_REGISTRO_REDUCER:
       return {
         ...state,
-        registros: state.registros.map(registro =>
-          registro.idRegistro === action.payload.idRegistro 
-          ? action.payload 
-          : registro
+        registros: state.registros.map((registro) =>
+          registro.idRegistro === action.payload.idRegistro ? action.payload : registro
         ),
+        registroPorId:
+          state.registroPorId && state.registroPorId.idRegistro === action.payload.idRegistro
+            ? action.payload
+            : state.registroPorId,
+      };
+    case TypesRegistro.SET_REGISTRO_ATUAL_REDUCER:
+      return {
+        ...state,
+        registroAtual: action.payload
       };
     case TypesRegistro.EXCLUIR_REGISTRO_REDUCER:
       return {
         ...state,
-        registros: state.registros.filter(registro =>
-          registro.idRegistro !== action.payload
-        ),
-      };
+        registros: state.registros.filter(
+            (registro) => registro.idRegistro !== action.payload
+          ),
+        registroPorId:
+            state.registroPorId && state.registroPorId.idRegistro === action.payload
+              ? null
+              : state.registroPorId,
+        };
     case TypesRegistro.CALC_GASTOS_POR_CATEGORIA_REDUCER:
       return {
         ...state,
@@ -123,6 +136,11 @@ export const atualizarRegistroReducer = (registro) => ({
   },
 });
 
+const setRegistroAtualReducer = (registroAtual) => ({
+  type: TypesRegistro.SET_REGISTRO_ATUAL_REDUCER,
+  payload: registroAtual
+});
+
 export const excluirRegistroReducer = (idRegistro) => ({
   type: TypesRegistro.EXCLUIR_REGISTRO_REDUCER,
   payload: idRegistro,
@@ -158,6 +176,7 @@ export const registroActions = {
   carregarRegistrosReducer,
   carregarRegistroPorIdReducer,
   atualizarRegistroReducer,
+  setRegistroAtualReducer,
   excluirRegistroReducer,
   calcGastosPorCategoriaReducer,
   calcRegistroPorFormaDePagamentoReducer,
