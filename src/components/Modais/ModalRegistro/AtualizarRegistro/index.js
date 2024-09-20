@@ -277,9 +277,7 @@ const AtualizarRegistro = ({
       idCusto,
       idCategoria,
       idSubcategoria,
-      idFormaDePagamento,
-      
-      
+      idFormaDePagamento, 
     } = registro;
 
     if (

@@ -50,9 +50,9 @@ export const listarRegistro = async () => {
     }
   };
   
-  export const excluirRegistro = async (id) => {
+  export const excluirRegistro = async (registro) => {
     try {
-      const response = await api.delete(`api/excluirRegistro/${id}`);
+      const response = await api.delete(`api/excluirRegistro/${registro.idRegistro}`);
       return response.data;
     } catch (error) {
       console.error("Erro ao excluir o registro", error);

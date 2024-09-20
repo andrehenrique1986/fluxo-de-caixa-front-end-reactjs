@@ -61,13 +61,12 @@ const registroReducer = (state = initialState, action) => {
       return {
         ...state,
         registros: state.registros.filter(
-            (registro) => registro.idRegistro !== action.payload
-          ),
-        registroPorId:
-            state.registroPorId && state.registroPorId.idRegistro === action.payload
-              ? null
-              : state.registroPorId,
-        };
+          registro => registro.idRegistro !== action.payload
+        ),
+        registroPorId: state.registroPorId && state.registroPorId.idRegistro === action.payload
+          ? null
+          : state.registroPorId
+      };  
     case TypesRegistro.CALC_GASTOS_POR_CATEGORIA_REDUCER:
       return {
         ...state,

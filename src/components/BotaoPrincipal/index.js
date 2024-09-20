@@ -2,33 +2,22 @@ import React from "react";
 import styled from "styled-components";
 import tw from "twin.macro";
 
-// Botão com estilos responsivos
 const Botao = styled.button`
   ${tw`bg-custom-blue 
        text-white 
-       text-xs  // Tamanho padrão para celulares
-       py-2 
-       px-4 
+       text-sm 
+       py-3 
+       px-6 
        border-none 
        rounded-full 
        cursor-pointer 
        flex 
        justify-center 
-       mt-2`} // Reduzir o margin-top em telas pequenas
+       mt-4`}
 
-  // Estilos para tablets
-  @media (min-width: 768px) {
-    ${tw`text-sm 
-         py-3 
-         px-6`} // Ajustar padding e tamanho da fonte para tablets
-  }
   
-  // Estilos para telas grandes
-  @media (min-width: 1024px) {
-    ${tw`text-base 
-         py-4 
-         px-8`} // Ajustar padding e tamanho da fonte para telas grandes
-  }
+  ${tw`md:text-base md:py-4 md:px-8`} 
+  ${tw`lg:text-lg lg:py-5 lg:px-10`}   
 
   &:hover {
     ${tw`bg-custom-dark-blue`}
