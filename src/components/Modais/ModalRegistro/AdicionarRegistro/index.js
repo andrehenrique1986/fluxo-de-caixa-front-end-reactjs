@@ -227,6 +227,7 @@ const AdicionarRegistro = ({ aberto, fechado }) => {
       dispatch(registroActions.carregarRegistrosReducer(registrosAtualizados));
       const dataFormatada = formatDateToDisplay(novoRegistro.dtRegistro);
       toast.success(`Registro adicionado com sucesso! Adicionado em: ${dataFormatada}`);
+      fechado();
     } catch (error) {
       toast.error("Erro ao adicionar o registro: " + error.message);
     }

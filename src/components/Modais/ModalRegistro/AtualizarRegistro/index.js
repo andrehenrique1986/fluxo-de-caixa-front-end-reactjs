@@ -183,7 +183,7 @@ const AtualizarRegistro = ({
   const limparRegistros = () => {
     setRegistro({
       idRegistro: null,
-      dtRegistro: Date.now(),
+      dtRegistro: "",
       fluxo: "",
       categoria: "",
       subCategoria: "",
@@ -312,6 +312,7 @@ const AtualizarRegistro = ({
       dispatch(registroActions.carregarRegistrosReducer(registrosAtualizados));
       const dataAtualização = formatDateToDisplay(new Date (Date.now()));
       toast.success(`Registro atualizado com sucesso! Atualizado em: ${dataAtualização}`);
+      fechado();
     } catch (error) {
       toast.error("Erro ao atualizar o registro: " + error.message);
     }

@@ -8,7 +8,7 @@ import { listarRegistro } from "../../api/registroAPI";
 import { registroActions } from "../../redux/reducers/registroReducer";
 import AtualizarRegistro from "../../components/Modais/ModalRegistro/AtualizarRegistro";
 import { toast, ToastContainer } from "react-toastify";
-import ExcluirRegistro from "../../components/Modais/ModalRegistro";
+import ExcluirRegistro from "../../components/Modais/ModalRegistro/ExcluirRegistro";
 import 'react-toastify/dist/ReactToastify.css';
 
 const formatarData = (data) => {
@@ -122,11 +122,13 @@ const Painel = () => {
     toast.error("Erro ao excluir o registro: " + erro.message);
   };
 
-  const handleSuccessExcluirRegistro = (registro, registroExcluido) => {
+  const handleSuccessExcluirRegistro = async (registro, registroExcluido) => {
     if (registroExcluido) {
+      toast.success("Registro excluído com sucesso!");
       
       dispatch(registroActions.excluirRegistroReducer(registro));
-      toast.success("Registro excluído com sucesso!");
+      const registrosExcluidos = await listarRegistro();
+      dispatch(registroActions.carregarRegistrosReducer(registrosExcluidos));
   
       if (registros.length === 1) {
         dispatch(registroActions.carregarRegistrosReducer([]));
@@ -213,7 +215,7 @@ const Painel = () => {
           onError={handleErrorAtualizarRegistro}
         />
       )}
-      { modalExcluirRegistro && (
+      { modalExcluirRegistro && registroAtual && (
         <ExcluirRegistro 
         aberto={modalExcluirRegistro}
         fechado={fecharModalExcluirRegistro}
