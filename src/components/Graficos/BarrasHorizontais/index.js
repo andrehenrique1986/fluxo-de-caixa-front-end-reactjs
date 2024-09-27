@@ -39,7 +39,6 @@ const BarrasHorizontais = () => {
         
         dispatch(registroActions.calcGastosPorCategoriaReducer(valorRegistroData));
       } catch (error) {
-        console.log("Erro ao carregar os dados: " + error.message);
         toast.error("Erro ao carregar dados: " + error.message);
         setErro(error.message);
       } finally {

@@ -69,6 +69,7 @@ const Painel = () => {
   const [modalExcluirRegistro, setModalExcluirRegistro] = useState(false);
   const [registroAtual, setRegistroAtual] = useState(null);
   const [registrosCarregados, setRegistrosCarregados] = useState(true);
+  
 
   const abrirModalAtualizarRegistro = (registro) => {
     setRegistroAtual(registro);
@@ -105,6 +106,7 @@ const Painel = () => {
 
     listarRegistros();
   }, [dispatch]);
+
 
   const handleSuccessAtualizarRegistro = (registro, registroAtualizado) => {
     if (registroAtualizado) {

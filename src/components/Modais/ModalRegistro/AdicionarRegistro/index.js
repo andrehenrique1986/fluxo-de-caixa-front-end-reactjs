@@ -222,7 +222,6 @@ const AdicionarRegistro = ({ aberto, fechado }) => {
 
       await adicionarRegistro(novoRegistro);
       dispatch(registroActions.adicionarRegistroReducer(novoRegistro));
-      console.log(novoRegistro);
       const registrosAtualizados = await listarRegistro();
       dispatch(registroActions.carregarRegistrosReducer(registrosAtualizados));
       const dataFormatada = formatDateToDisplay(novoRegistro.dtRegistro);
@@ -233,10 +232,7 @@ const AdicionarRegistro = ({ aberto, fechado }) => {
     }
   };
 
-  console.log(registro);
   if (!aberto) return null;
-
- 
 
   return (
     <>

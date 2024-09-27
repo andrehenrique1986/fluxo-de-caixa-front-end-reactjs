@@ -90,6 +90,7 @@ const Cards = () => {
       valorEntradaFormatado: entrada.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }),
       valorSaidaFormatado: saida.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }),
       valorSaldoFormatado: saldo.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }),
+      saldo,
     };
   });
 
