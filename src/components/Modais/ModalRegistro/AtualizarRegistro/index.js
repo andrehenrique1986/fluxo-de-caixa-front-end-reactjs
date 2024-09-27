@@ -297,7 +297,7 @@ const AtualizarRegistro = ({
      try {
         const alterarRegistro = {
           idRegistro: parseInt(idRegistro, 10),
-          dtRegistro: new Date(),
+          dtRegistro: formatDateForInput(dtRegistro),
           valorRegistro: parseFloat(valor) || 0,
           idFluxo: parseInt(idFluxo, 10),
           idCusto: parseInt(idCusto, 10),

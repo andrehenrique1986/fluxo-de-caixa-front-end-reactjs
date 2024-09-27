@@ -4,7 +4,7 @@ const API_BASE_URL = "https://localhost:44374/Registro/";
 
 const api = axios.create({
   baseURL: API_BASE_URL,
-  timeout: 30000,
+  timeout: 200000,
   headers: {
     "Content-Type": "application/json",
   },
@@ -63,6 +63,7 @@ export const listarRegistro = async () => {
   export const calcularGastosPorCategoria = async (idCategoria) => {
     try {
         const response = await api.get(`api/calcularGastosPorCategoria/${idCategoria}`);
+        console.log(response);
         return response.data;
     } catch (error) {
         console.error("Erro ao realizar o cálculo", error);
@@ -104,7 +105,7 @@ export const listarRegistro = async () => {
 
   export const calcularRegistroPorFluxo = async (idFluxo) => {
     try {
-        const response = await api.get(`api/calcularPorcentagemPorCusto/${idFluxo}`);
+        const response = await api.get(`api/calcularRegistroPorFluxo/${idFluxo}`);
         return response.data;
     } catch (error) {
         console.error("Erro ao realizar o cálculo", error);
