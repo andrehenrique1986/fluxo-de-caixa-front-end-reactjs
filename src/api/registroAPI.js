@@ -112,6 +112,16 @@ export const listarRegistro = async () => {
     }
   }
 
+  export const filtrarRegistrosPorData = async (filtro) => {
+    try {
+        const response = await api.get("api/filtrarRegistrosPorData", { params: filtro });
+        return response.data;
+    } catch (error) {
+        console.error("Erro ao filtrar os registros", error);
+        throw error;
+    }
+};
+
 
 
 

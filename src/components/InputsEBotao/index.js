@@ -17,11 +17,11 @@ const DivInputs = styled.div`
   ${tw`flex-1`}
 `;
 
-const InputsEBotao = () => {
+const InputsEBotao = ({ dataInicial, dataFinal, onChange }) => {
   return (
     <Container>
       <DivInputs>
-        <InputsDatas />
+        <InputsDatas dataInicial={dataInicial} dataFinal={dataFinal} onChange={onChange} />
       </DivInputs>
     </Container>
   );

@@ -37,7 +37,6 @@ const TypesFluxo = {
     }
   };
   
-
   
   const carregarFluxosReducer = (fluxos) => ({
     type: TypesFluxo.CARREGAR_FLUXOS_REDUCER,

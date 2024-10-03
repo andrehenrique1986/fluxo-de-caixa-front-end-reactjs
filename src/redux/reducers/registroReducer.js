@@ -9,11 +9,13 @@ const TypesRegistro = {
   CALC_REGISTRO_POR_FORMA_PGTO_REDUCER: 'CALC_REGISTRO_POR_FORMA_PGTO_REDUCER',
   CALC_PORCENTAGEM_POR_CUSTO_REDUCER: 'CALC_PORCENTAGEM_POR_CUSTO_REDUCER',
   CALC_REGISTRO_POR_FLUXO_REDUCER: 'CALC_REGISTRO_POR_FLUXO_REDUCER',  
-  ERRO_REGISTRO_REDUCER: 'ERRO_REGISTRO_REDUCER'
+  ERRO_REGISTRO_REDUCER: 'ERRO_REGISTRO_REDUCER',
+  FILTRAR_REGISTROS_POR_DATA_REDUCER: 'FILTRAR REGISTROS_POR_DATA_REDUCER'
 };
 
 const initialState = {
   registros: [],
+  regitrosFiltrados: [],
   error: null,
   registroPorId: null,
   gastosPorCategoria: null,
@@ -24,7 +26,6 @@ const initialState = {
 };
 
 const registroReducer = (state = initialState, action) => {
-   console.log('Ação recebida:', action);
   switch (action.type) {
     case TypesRegistro.ADICIONAR_REGISTRO_REDUCER:
       return {
@@ -92,6 +93,26 @@ const registroReducer = (state = initialState, action) => {
         ...state,
         error: action.payload
       };
+      case TypesRegistro.FILTRAR_REGISTROS_POR_DATA_REDUCER:
+        const registrosFiltrados = action.payload.map(registro => ({
+          categoriaNome: registro.categoriaNome,
+          dataRegistro: registro.dataRegistro,
+          formaDePagamento: registro.formaDePagamento,
+          id: registro.id,
+          idCategoria: registro.idCategoria,
+          idCusto: registro.idCusto,
+          idFluxo: registro.idFluxo,
+          idFormaDePagamento: registro.idFormaDePagamento,
+          idSubcategoria: registro.idSubcategoria,
+          subcategoriaNome: registro.subcategoriaNome,
+          tipoDeCusto: registro.tipoDeCusto,
+          tipoDeFluxo: registro.tipoDeFluxo,
+          valor: registro.valor
+        }));
+        return {
+          ...state,
+          registrosFiltrados
+        };
     default:
       return state;
   }
@@ -107,7 +128,7 @@ export const adicionarRegistroReducer = (registro) => ({
     idCusto: registro.idCusto, 
     idFormaDePagamento: registro.idFormaDePagamento,
     dtRegistro: registro.dtRegistro,
-    valorRegistro: registro.valorRegistro,
+    valorRegistro: registro.valorRegistro
   }
 });
 
@@ -123,16 +144,7 @@ export const carregarRegistroPorIdReducer = (registro) => ({
 
 export const atualizarRegistroReducer = (registro) => ({
   type: TypesRegistro.ATUALIZAR_REGISTRO_REDUCER,
-  payload: {
-      idRegistro: registro.idRegistro,
-      idFluxo: registro.idFluxo,
-      idCategoria: registro.idCategoria, 
-      idSubcategoria: registro.idSubcategoria, 
-      idCusto: registro.idCusto, 
-      idFormaDePagamento: registro.idFormaDePagamento,
-      dtRegistro: registro.dtRegistro,
-      valorRegistro: registro.valorRegistro,
-  },
+  payload: registro
 });
 
 const setRegistroAtualReducer = (registroAtual) => ({
@@ -170,6 +182,25 @@ export const erroRegistroReducer = (error) => ({
   payload: error,
 });
 
+export const filtrarRegistrosPorDataReducer = (registros) => ({
+  type: TypesRegistro.FILTRAR_REGISTROS_POR_DATA_REDUCER,
+  payload: registros.map(registro => ({
+    categoriaNome: registro.categoriaNome,
+    dataRegistro: registro.dataRegistro ,
+    formaDePagamento: registro.formaDePagamento,
+    id: registro.id, 
+    idCategoria: registro.idCategoria,
+    idCusto: registro.idCusto,
+    idFluxo: registro.idFluxo,
+    idFormaDePagamento: registro.idFormaDePagamento,
+    idSubcategoria: registro.idSubcategoria,
+    subcategoriaNome: registro.subcategoriaNome,
+    tipoDeCusto: registro.tipoDeCusto,
+    tipoDeFluxo: registro.tipoDeFluxo,
+    valor: registro.valor
+  }))
+});
+
 export const registroActions = {
   adicionarRegistroReducer,
   carregarRegistrosReducer,
@@ -181,7 +212,8 @@ export const registroActions = {
   calcRegistroPorFormaDePagamentoReducer,
   calcPorcentagemPorCustoReducer,
   calcRegistroPorFluxoReducer,
-  erroRegistroReducer
+  erroRegistroReducer,
+  filtrarRegistrosPorDataReducer
 }
 
 export default registroReducer;

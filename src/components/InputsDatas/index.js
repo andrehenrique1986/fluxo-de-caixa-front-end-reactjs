@@ -4,9 +4,9 @@ import tw from 'twin.macro';
 import BotaoPrincipal from '../BotaoPrincipal';
 import AdicionarRegistro from '../Modais/ModalRegistro/AdicionarRegistro';
 import { registroActions } from '../../redux/reducers/registroReducer';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
-
+import { filtrarRegistrosPorData, listarRegistro } from '../../api/registroAPI'; 
 
 const Container = styled.div`
   ${tw`flex flex-col gap-4 mt-1 p-4`}
@@ -42,63 +42,88 @@ const ErrorMessage = styled.div`
   ${tw`text-red-600 font-bold mt-2`}
 `;
 
-
 const InputsDatas = () => {
   const dispatch = useDispatch();
   const [modalAdicionarRegistro, setModalAdicionarRegistro] = useState(false);
-  const registros = useSelector(state => state.registroReducer?.registros || []);
   const [dataInicial, setDataInicial] = useState('');
   const [dataFinal, setDataFinal] = useState('');
-  const [registrosFiltrados, setRegistrosFiltrados] = useState([]);
   const [mensagemErro, setMensagemErro] = useState('');
-
 
   const abrirModalAdicionarRegistro = () => setModalAdicionarRegistro(true);
   const fecharModalAdicionarRegistro = () => setModalAdicionarRegistro(false);
-
 
   const handleInputChange = (setter) => (e) => {
     setter(e.target.value);
   };
 
 
-  const handleFiltroData = () => {
+  const handleDataBlur = (setter) => (e) => {
+    const inputDate = new Date(e.target.value);
+    const today = new Date();
+
+    
+    today.setHours(0, 0, 0, 0);
+    
+    if (inputDate > today) {
+      toast.error("A data não pode ser posterior a hoje.");
+      setter(''); 
+    }
+  };
+
+  const handleFiltroData = async (e) => {
+    e.preventDefault();
+
     if (!dataInicial || !dataFinal) {
       toast.error("Ambas as datas devem ser preenchidas.");
       return;
     } else if (new Date(dataFinal) < new Date(dataInicial)) {
       toast.error("A data final não pode ser menor que a data inicial.");
+      limparCampos();
       return;
-    } else if (new Date(dataInicial) > new Date(dataFinal)) {
-      toast.error("A data inicial não pode ser maior que a data final.");
-      return;
-    }
-  
-    const filtro = registros.filter(r => {
-      const dataRegistro = new Date(r.dtRegistro);
-      return (
-        (!dataInicial || dataRegistro >= new Date(dataInicial)) &&
-        (!dataFinal || dataRegistro <= new Date(dataFinal))
-      );
-    });
-  
-    
-    if (filtro.length === 0) {
-      toast.error("Registros não encontrados.");
+    } else if (new Date(dataInicial) > new Date(dataFinal)){
+      toast.error("A data inicial não pode ser maior que a data inicial.");
+      limparCampos();
       return;
     }
-  
-    setRegistrosFiltrados(filtro);
-  };
-  
 
-  
-  const clearFilters = () => {
+    const filtro = {
+      dataInicial: new Date(dataInicial), 
+      dataFinal: new Date(dataFinal),
+    };
+
+    try {
+      const registrosFiltrados = await filtrarRegistrosPorData(filtro);
+      if (registrosFiltrados.length === 0){
+        toast.error("Registro(s) não encontrado(s)");
+        limparCampos();
+      } else {
+        dispatch(registroActions.filtrarRegistrosPorDataReducer(registrosFiltrados));
+        setMensagemErro(''); 
+      }
+    } catch (error) {
+      toast.error("Erro ao filtrar registros: " + error.message);
+    }
+  };
+
+  const limparCampos = () => {
     setDataInicial('');
     setDataFinal('');
-    setRegistrosFiltrados(registros); 
-  };
+  }
 
+  const limparFiltro = async (e) => {
+    e.preventDefault();
+      try {
+        if (dataInicial && dataFinal){
+          const todosRegistros = await listarRegistro();
+          limparCampos();
+          dispatch(registroActions.carregarRegistrosReducer(todosRegistros));
+          dispatch(registroActions.filtrarRegistrosPorDataReducer([]));
+          toast.success("Todos os registros carregados.");
+        }
+      } catch (error) {
+        toast.error("Erro ao carregar os registros");
+      }
+  };
 
   const handleSuccessNovoRegistro = (novoRegistro) => {
     dispatch(registroActions.adicionarRegistroReducer(novoRegistro));
@@ -107,6 +132,12 @@ const InputsDatas = () => {
   const handleErrorRegistro = (erro) => {
     toast.error("Erro ao adicionar um novo registro: " + erro.message);
   };
+
+  const dataHoje = () => {
+    return new Date().toISOString().split('T')[0];
+  }
+
+  
 
   return (
     <Container>
@@ -118,7 +149,9 @@ const InputsDatas = () => {
               type="date" 
               value={dataInicial}
               onChange={handleInputChange(setDataInicial)}
+              onBlur={handleDataBlur(setDataInicial)}
               aria-label="Data Inicial"
+              max={dataHoje()}
             />
           </label>
           <label>
@@ -127,12 +160,23 @@ const InputsDatas = () => {
               type="date" 
               value={dataFinal}
               onChange={handleInputChange(setDataFinal)}
+              onBlur={handleDataBlur(setDataFinal)}
               aria-label="Data Final"
+              max={dataHoje()}
+              
             />
           </label>
           <ButtonsContainer>
-            <BotaoPrincipal onClick={handleFiltroData}>Buscar</BotaoPrincipal>
-            <BotaoPrincipal onClick={clearFilters}>Limpar</BotaoPrincipal>
+            <BotaoPrincipal 
+            onClick={handleFiltroData}
+            dataInicial={dataInicial}
+            dataFinal={dataFinal}
+            >Buscar</BotaoPrincipal>
+            <BotaoPrincipal 
+            onClick={limparFiltro}
+            limparFiltro={limparFiltro}
+            >
+            Limpar</BotaoPrincipal>
             <BotaoPrincipal onClick={abrirModalAdicionarRegistro}>Novo Registro</BotaoPrincipal>
             <AdicionarRegistro 
               aberto={modalAdicionarRegistro}
@@ -149,6 +193,7 @@ const InputsDatas = () => {
 };
 
 export default InputsDatas;
+
 
 
 

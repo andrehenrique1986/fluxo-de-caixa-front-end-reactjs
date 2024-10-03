@@ -8,20 +8,33 @@ import { fluxoActions } from "../../../redux/reducers/fluxoReducer";
 import { registroActions } from "../../../redux/reducers/registroReducer";
 import { calcularRegistroPorFluxo } from "../../../api/registroAPI";
 
+
+const Container = styled.div``;
+
 const CardContainer = styled.div`
-  ${tw`flex flex-col gap-4 text-center`}
+  ${tw`flex 
+       flex-col 
+       gap-4 
+       text-center`
+       }
 `;
 
 const CardRow = styled.div`
-  ${tw`flex gap-4`}
+  ${tw`flex 
+       gap-4`
+       }
 `;
 
-const Card = styled.div`
-  ${tw`bg-[#80ae51] shadow-md rounded-lg p-4 flex-1`}
-`;
+const Card = styled.div(({ saldo }) => [
+  tw`shadow-md 
+     rounded-lg 
+     p-4 
+     flex-1`,
+  saldo < 0 ? tw`bg-red-300` : tw`bg-[#80ae51]`
+]);
 
-const CardSaida = styled.div`
-  ${tw`bg-[#f5c8a8] shadow-md rounded-lg p-4 flex-1`}
+const CardSaida = styled(Card)`
+  ${tw`bg-[#f5c8a8]`}
 `;
 
 const Valor = styled.h4(({ saldo }) => [
@@ -38,24 +51,30 @@ const Saldo = styled.span`
 `;
 
 const TextoGrafico = styled.h1`
-  ${tw`text-xl text-center my-4`}
+  ${tw`text-xl 
+       text-center my-4`
+       }
 `;
+
+
+
+const formatarValor = (valor) => {
+  const parsedValue = parseFloat(valor.replace(/[R$,.]/g, '').trim()) / 100 || 0;
+  return parsedValue.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+};
 
 const Cards = () => {
   const dispatch = useDispatch();
   const [fluxoCard, setFluxoCard] = useState([]);
   const [valorCard, setValorCard] = useState([]);
-  const [carregando, setCarrgegando] = useState(true);
-  const [erro, setErro] = useState(null);
-  
+  const [loadingState, setLoadingState] = useState({ loading: true, error: null });
 
   useEffect(() => {
     const buscarDados = async () => {
-      setCarrgegando(true);
+      setLoadingState({ loading: true, error: null });
       try {
         const fluxoData = await listarFluxo();
         dispatch(fluxoActions.carregarFluxosReducer(fluxoData));
-
         setFluxoCard(fluxoData);
 
         const valorRegistroData = await Promise.all(
@@ -66,47 +85,40 @@ const Cards = () => {
         dispatch(registroActions.calcRegistroPorFluxoReducer(valorRegistroData));
 
       } catch (error) {
-        toast.error("Erro ao carregar dados: " + error.message);
-        setErro(error.message);
+        toast.error(`Erro ao carregar dados: ${error.message}`);
+        setLoadingState({ loading: false, error: error.message });
       } finally {
-        setCarrgegando(false);
+        setLoadingState(prev => ({ ...prev, loading: false }));
       }
     };
 
     buscarDados();
   }, [dispatch]);
 
-
   const dadosCard = fluxoCard.map((fl, index) => {
-    const valorEntrada = valorCard[index]?.entrada || "0";
-    const valorSaida = valorCard[index]?.saida || "0";
-    const valorSaldo = valorCard[index]?.saldo || "0";
-
-    const entrada = parseFloat(valorEntrada.replace(/[R$,.]/g, '').trim()) / 100 || 0;
-    const saida = parseFloat(valorSaida.replace(/[R$,.]/g, '').trim()) / 100 || 0;
-    const saldo = parseFloat(valorSaldo.replace(/[R$,.]/g, '').trim()) / 100 || 0;
+    const { entrada = "0", saida = "0", saldo = "0" } = valorCard[index] || {};
 
     return {
-      valorEntradaFormatado: entrada.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }),
-      valorSaidaFormatado: saida.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }),
-      valorSaldoFormatado: saldo.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }),
-      saldo,
+      valorEntradaFormatado: formatarValor(entrada),
+      valorSaidaFormatado: formatarValor(saida),
+      valorSaldoFormatado: formatarValor(saldo),
+      saldo: parseFloat(saldo.replace(/[R$,.]/g, '').trim()) / 100 || 0,
     };
   });
 
-  if (carregando) {
+  if (loadingState.loading) {
     return <div>Carregando...</div>;
   }
 
-  if (erro) {
-    return <div>{`Erro: ${erro}`}</div>;
+  if (loadingState.error) {
+    return <div>{`Erro: ${loadingState.error}`}</div>;
   }
 
   return (
-    <div>
+    <Container>
       <TextoGrafico>Saldo Total por Fluxo</TextoGrafico>
       {dadosCard.length > 0 && (
-        <CardContainer key={dadosCard[0].fluxo}>
+        <CardContainer>
           <CardRow>
             <Card>
               <Valor>{dadosCard[0].valorEntradaFormatado}</Valor>
@@ -117,19 +129,20 @@ const Cards = () => {
               <TipoFluxo>Saída</TipoFluxo>
             </CardSaida>
           </CardRow>
-          <Card>
+          <Card saldo={dadosCard[0].saldo}>
             <Valor saldo={dadosCard[0].saldo}>
-            {dadosCard[0].valorSaldoFormatado}
+              {dadosCard[0].valorSaldoFormatado}
             </Valor>
             <Saldo>Saldo</Saldo>
           </Card>
         </CardContainer>
       )}
-    </div>
+    </Container>
   );
 };
 
 export default Cards;
+
 
 
 

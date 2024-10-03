@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { BsFillPencilFill } from "react-icons/bs";
 import { FaTrashAlt } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
-import { listarRegistro } from "../../api/registroAPI";
+import { filtrarRegistrosPorData, listarRegistro } from "../../api/registroAPI";
 import { registroActions } from "../../redux/reducers/registroReducer";
 import AtualizarRegistro from "../../components/Modais/ModalRegistro/AtualizarRegistro";
 import { toast, ToastContainer } from "react-toastify";
@@ -12,11 +12,16 @@ import ExcluirRegistro from "../../components/Modais/ModalRegistro/ExcluirRegist
 import 'react-toastify/dist/ReactToastify.css';
 
 const formatarData = (data) => {
-  if (typeof data === 'string') {
-    const [ano, mes, dia] = data.split('-');
-    return `${dia.substring(0, 2)}/${mes}/${ano}`;
+  try {
+    
+    if (data !== undefined && typeof data === 'string') {
+      const [ano, mes, dia] = data.split('-');
+      return `${dia.substring(0, 2)}/${mes}/${ano}`;
+    }
+  } catch (error) {
+    
+    console.error(`Erro ao formatar data: ${data}`, error);
   }
-  console.error("Erro ao formatar data:", data);
 };
 
 const Container = styled.div`
@@ -61,16 +66,17 @@ const Icone = styled.div`
   }
 `;
 
-// Componente principal
-const Painel = () => {
+const Painel = ({ dataInicio, dataFim, limparFiltro }) => {
   const dispatch = useDispatch();
   const registros = useSelector(state => state.registros.registros || []);
+  const registrosFiltrados = useSelector(state => state.registros.registrosFiltrados || []);
   const [modalAtualizarRegistro, setModalAtualizarRegistro] = useState(false);
   const [modalExcluirRegistro, setModalExcluirRegistro] = useState(false);
   const [registroAtual, setRegistroAtual] = useState(null);
   const [registrosCarregados, setRegistrosCarregados] = useState(true);
+  const [dataInicial, setDataInicial] = useState(dataInicio);
+  const [dataFinal, setDataFinal] = useState(dataFim);
   
-
   const abrirModalAtualizarRegistro = (registro) => {
     setRegistroAtual(registro);
     setModalAtualizarRegistro(true);
@@ -92,11 +98,19 @@ const Painel = () => {
   };
 
   useEffect(() => {
+    setDataInicial(dataInicio);
+    setDataFinal(dataFim);
+  }, [dataInicio, dataFim]);
+
+  useEffect(() => {
     const listarRegistros = async () => {
       setRegistrosCarregados(true);
       try {
-        const data = await listarRegistro();
-        dispatch(registroActions.carregarRegistrosReducer(data));
+        const data = (!dataInicial && !dataFinal) 
+          ? await listarRegistro() 
+          : await filtrarRegistrosPorData({ dataInicial, dataFinal });
+  
+          dispatch(registroActions.carregarRegistrosReducer(data));  
       } catch (error) {
         dispatch(registroActions.erroRegistroReducer(`Erro ao carregar os registros: ${error.message}`));
       } finally {
@@ -104,9 +118,11 @@ const Painel = () => {
       }
     };
 
-    listarRegistros();
-  }, [dispatch]);
+    
 
+    listarRegistros();
+    
+  }, [dispatch, dataInicial, dataFinal]);
 
   const handleSuccessAtualizarRegistro = (registro, registroAtualizado) => {
     if (registroAtualizado) {
@@ -127,7 +143,6 @@ const Painel = () => {
   const handleSuccessExcluirRegistro = async (registro, registroExcluido) => {
     if (registroExcluido) {
       toast.success("Registro excluído com sucesso!");
-      
       dispatch(registroActions.excluirRegistroReducer(registro));
       const registrosExcluidos = await listarRegistro();
       dispatch(registroActions.carregarRegistrosReducer(registrosExcluidos));
@@ -157,11 +172,13 @@ const Painel = () => {
     valorEscolhido: registroAtual.valor,
   } : {};
 
+  const mostrarRegistros = registrosFiltrados.length > 0 ? registrosFiltrados : registros;
+
   return (
     <Container>
       {registrosCarregados ? (
         <CelulaTabela colSpan="10">Carregando registros...</CelulaTabela>
-      ) : registros.length === 0 ? (
+      ) : mostrarRegistros.length === 0 ? (
         <CelulaTabela colSpan="10">Nenhum registro encontrado!</CelulaTabela>
       ) : (
         <Tabela>
@@ -180,7 +197,7 @@ const Painel = () => {
             </LinhaTabela>
           </CabecalhoTabela>
           <CorpoTabela>
-            {registros.map(registro => (
+            {mostrarRegistros.map(registro => (
               <LinhaTabela key={registro.id}>
                 <CelulaTabela>{registro.id}</CelulaTabela>
                 <CelulaTabela>{formatarData(registro.dataRegistro)}</CelulaTabela>
@@ -205,7 +222,6 @@ const Painel = () => {
               </LinhaTabela>
             ))}
           </CorpoTabela>
-          
         </Tabela>
       )}
       {registroAtual && (
@@ -217,24 +233,23 @@ const Painel = () => {
           onError={handleErrorAtualizarRegistro}
         />
       )}
-      { modalExcluirRegistro && registroAtual && (
+      {modalExcluirRegistro && registroAtual && (
         <ExcluirRegistro 
-        aberto={modalExcluirRegistro}
-        fechado={fecharModalExcluirRegistro}
-        {...registroProps}
-        onSuccess={handleSuccessExcluirRegistro}
-        onError={handleErrorExcluirRegistro}
-      />
-      )
-
-      }
-      
-     <ToastContainer /> 
+          aberto={modalExcluirRegistro}
+          fechado={fecharModalExcluirRegistro}
+          {...registroProps}
+          onSuccess={handleSuccessExcluirRegistro}
+          onError={handleErrorExcluirRegistro}
+        />
+      )}
+      <ToastContainer /> 
     </Container>
   );
 };
 
 export default Painel;
+
+
 
 
 
