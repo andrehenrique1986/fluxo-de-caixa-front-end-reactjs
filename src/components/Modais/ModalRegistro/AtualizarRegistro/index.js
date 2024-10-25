@@ -69,6 +69,15 @@ const formatDateToDisplay = (dateStr) => {
   return `${day}/${month}/${year}`;
 };
 
+const formatHoursToDisplay = (hourStr) => {
+  const date = new Date(hourStr); // Cria um objeto Date a partir da string
+  const options = {
+    hour: '2-digit',
+    minute: '2-digit',
+  };
+  
+  return date.toLocaleTimeString('pt-BR', options); // Formata a hora para o padrão brasileiro
+};
 
 const formatDateForInput = (dateStr) => {
   if (!dateStr) return "";
@@ -310,8 +319,9 @@ const AtualizarRegistro = ({
       dispatch(registroActions.atualizarRegistroReducer(alterarRegistro));
       const registrosAtualizados = await listarRegistro();
       dispatch(registroActions.carregarRegistrosReducer(registrosAtualizados));
-      const dataAtualização = formatDateToDisplay(new Date (Date.now()));
-      toast.success(`Registro atualizado com sucesso! Atualizado em: ${dataAtualização}`);
+      const dataAtualizacao = formatDateToDisplay(new Date (Date.now()));
+      const horaAtualizacao = formatHoursToDisplay(new Date (Date.now()));
+      toast.success(`Registro atualizado com sucesso! Atualizado em: ${dataAtualizacao} às ${horaAtualizacao}`);
       fechado();
     } catch (error) {
       toast.error("Erro ao atualizar o registro: " + error.message);

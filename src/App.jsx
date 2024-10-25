@@ -5,6 +5,9 @@ import  {store, persistor } from './redux/store';
 import { PersistGate } from 'redux-persist/integration/react'; 
 import PaginaPrincipalWrapper from './pages/PaginaPrincipalWrapper/PaginaPrincipalWrapper';
 
+
+
+
 const App = () => {
   return (
     <Provider store={store}>

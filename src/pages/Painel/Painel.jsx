@@ -66,7 +66,7 @@ const Icone = styled.div`
   }
 `;
 
-const Painel = ({ dataInicio, dataFim, limparFiltro }) => {
+const Painel = ({ dataInicio, dataFim }) => {
   const dispatch = useDispatch();
   const registros = useSelector(state => state.registros.registros || []);
   const registrosFiltrados = useSelector(state => state.registros.registrosFiltrados || []);
@@ -106,22 +106,27 @@ const Painel = ({ dataInicio, dataFim, limparFiltro }) => {
     const listarRegistros = async () => {
       setRegistrosCarregados(true);
       try {
+        // Limpa as datas apenas no início do carregamento
+        if (!dataInicial && !dataFinal) {
+          setDataInicial('');
+          setDataFinal('');
+        }
+  
+        dispatch(registroActions.filtrarRegistrosPorDataReducer([]));
+  
         const data = (!dataInicial && !dataFinal) 
           ? await listarRegistro() 
           : await filtrarRegistrosPorData({ dataInicial, dataFinal });
   
-          dispatch(registroActions.carregarRegistrosReducer(data));  
+        dispatch(registroActions.carregarRegistrosReducer(data));
       } catch (error) {
         dispatch(registroActions.erroRegistroReducer(`Erro ao carregar os registros: ${error.message}`));
       } finally {
         setRegistrosCarregados(false);
       }
     };
-
-    
-
+  
     listarRegistros();
-    
   }, [dispatch, dataInicial, dataFinal]);
 
   const handleSuccessAtualizarRegistro = (registro, registroAtualizado) => {
@@ -130,6 +135,7 @@ const Painel = ({ dataInicio, dataFim, limparFiltro }) => {
       toast.success("Registro atualizado com sucesso!");
     }
     setModalAtualizarRegistro(false);
+    fecharModalAtualizarRegistro();
   };
 
   const handleErrorAtualizarRegistro = (erro) => {
@@ -154,6 +160,7 @@ const Painel = ({ dataInicio, dataFim, limparFiltro }) => {
       console.error("Erro ao excluir registro."); 
     }
     setModalExcluirRegistro(false);
+    fecharModalExcluirRegistro();
   };
 
   const registroProps = registroAtual ? {
@@ -192,8 +199,8 @@ const Painel = ({ dataInicio, dataFim, limparFiltro }) => {
               <CelulaTabela>Tipo Custo</CelulaTabela>
               <CelulaTabela>Forma Pagamento</CelulaTabela>
               <CelulaTabela>Valor</CelulaTabela>
-              <CelulaTabela></CelulaTabela>
-              <CelulaTabela></CelulaTabela>
+              <CelulaTabela>Alterar</CelulaTabela>
+              <CelulaTabela>Excluir</CelulaTabela>
             </LinhaTabela>
           </CabecalhoTabela>
           <CorpoTabela>
@@ -219,6 +226,7 @@ const Painel = ({ dataInicio, dataFim, limparFiltro }) => {
                     <FaTrashAlt className="text-red-600" />
                   </Icone>
                 </CelulaTabela>
+                
               </LinhaTabela>
             ))}
           </CorpoTabela>

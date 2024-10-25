@@ -16,7 +16,7 @@ import { calcularGastosPorCategoria } from "../../../api/registroAPI";
 import { categoriaActions } from "../../../redux/reducers/categoriaReducer";
 import { registroActions } from "../../../redux/reducers/registroReducer";
 import { toast } from "react-toastify";
-import PropTypes from "prop-types";
+
 
 // Estilização do título do gráfico
 const TextoGrafico = styled.h1`
@@ -90,7 +90,7 @@ const BarrasHorizontais = () => {
       <TextoGrafico>Gastos por Categoria</TextoGrafico>
       <BarChart width={500} height={300} data={dadosGrafico} layout="vertical">
         <XAxis type="number" />
-        <YAxis type="category" dataKey="nomeDaCategoria" />
+        <YAxis type="category" dataKey="nomeDaCategoria"/>
         <Tooltip />
         <CartesianGrid strokeDasharray="3 3" />
         <Bar dataKey="valorTotalCategoria" fill="#FF8042">

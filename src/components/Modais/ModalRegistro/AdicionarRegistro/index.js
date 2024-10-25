@@ -47,10 +47,6 @@ const Label = styled.label`
   ${tw`w-32 text-right font-medium text-black`}
 `;
 
-const Input = styled.input`
-  ${tw`border-2 border-custom-blue p-2 rounded w-3/4 text-black`}
-`;
-
 const ComboBox = styled.select`
   ${tw`border-2 border-custom-blue p-2 rounded w-3/4 text-black`}
 `;
@@ -69,6 +65,15 @@ const formatDateToDisplay = (dateStr) => {
   return `${day}/${month}/${year}`;
 };
 
+const formatHoursToDisplay = (hourStr) => {
+  const date = new Date(hourStr); // Cria um objeto Date a partir da string
+  const options = {
+    hour: '2-digit',
+    minute: '2-digit',
+  };
+  
+  return date.toLocaleTimeString('pt-BR', options); // Formata a hora para o padrão brasileiro
+};
 
 const formatDateForInput = (dateStr) => {
   const [day, month, year] = dateStr.split('/');
@@ -225,7 +230,8 @@ const AdicionarRegistro = ({ aberto, fechado }) => {
       const registrosAtualizados = await listarRegistro();
       dispatch(registroActions.carregarRegistrosReducer(registrosAtualizados));
       const dataFormatada = formatDateToDisplay(novoRegistro.dtRegistro);
-      toast.success(`Registro adicionado com sucesso! Adicionado em: ${dataFormatada}`);
+      const horaAtual = formatHoursToDisplay(novoRegistro.dtRegistro);
+      toast.success(`Registro adicionado com sucesso! Adicionado em: ${dataFormatada} às ${horaAtual}`);
       fechado();
     } catch (error) {
       toast.error("Erro ao adicionar o registro: " + error.message);

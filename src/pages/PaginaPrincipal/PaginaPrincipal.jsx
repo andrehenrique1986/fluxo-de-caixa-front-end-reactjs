@@ -10,6 +10,7 @@ import styled from "styled-components";
 import tw from "twin.macro";
 import DashBoard from "../Dashboard/Dashboard.jsx";
 
+
 // Container principal com flex e ajuste de altura mínima
 const Container = styled.div`
   ${tw`flex`};
@@ -50,7 +51,6 @@ const PaginaPrincipal = () => {
           </Routes>
         </ContentContainer>
       </Container>
-
       <Footer />
     </>
   );
