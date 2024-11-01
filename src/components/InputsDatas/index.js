@@ -102,6 +102,7 @@ const handleFiltroData = async (e) => {
  
     dataInicialObj.setHours(0, 0, 0, 0);
     dataFinalObj.setHours(23, 59, 59, 999);
+
  
     if (!dataInicialObj || !dataFinalObj) {
       toast.error("Ambas as datas devem ser preenchidas.");
