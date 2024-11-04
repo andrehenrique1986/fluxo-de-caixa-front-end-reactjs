@@ -7,31 +7,44 @@ import Cards from "../../components/Graficos/Cards";
 import GraficoPizza from "../../components/Graficos/GraficoPizza";
 
 const ContainerPrincipal = styled.div`
-  ${tw``}
+  ${tw`flex 
+       flex-col 
+       items-center`}
 `;
 
 const ContainerGrade = styled.div`
-  ${tw`grid grid-cols-2 gap-4 w-full max-w-4xl p-4`} // Ajuste o tamanho da grade conforme necessário
+  ${tw`grid 
+       xl:grid-cols-2 
+       gap-4 
+       w-full 
+       max-w-4xl 
+       p-4`}
 `;
 
 const Quadrado = styled.div`
-  ${tw`flex items-center justify-center p-4 bg-white shadow-md rounded-lg`}
-  height: 100%;
-  font-size: 0.875rem;
+  ${tw`flex 
+       items-center 
+       justify-center 
+       p-4 
+       bg-white 
+       shadow-md 
+       rounded-lg 
+       h-full 
+       text-sm`}
 `;
 
 const Dashboard = () => {
   return (
-    <ContainerPrincipal className="flex flex-col items-center">
+    <ContainerPrincipal>
       <ContainerGrade>
         <Quadrado>
-          <BarrasHorizontais/>
+          <BarrasHorizontais />
         </Quadrado>
         <Quadrado>
-        <Cards />
+          <Cards />
         </Quadrado>
         <Quadrado>
-        <BarrasVerticais />
+          <BarrasVerticais />
         </Quadrado>
         <Quadrado>
           <GraficoPizza />
@@ -42,6 +55,7 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+
 
 
 

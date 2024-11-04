@@ -38,6 +38,9 @@ const TituloSecundario = styled.h2`
 `;
 
 const Negrito = styled.b`
+    ${tw`
+     font-bold
+     `}
 `;
 
 const RedesSociais = styled.div`

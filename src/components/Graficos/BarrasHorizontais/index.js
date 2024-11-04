@@ -6,7 +6,6 @@ import {
   XAxis,
   YAxis,
   Tooltip,
-  CartesianGrid,
   LabelList,
 } from "recharts";
 import styled from "styled-components";
@@ -17,11 +16,26 @@ import { categoriaActions } from "../../../redux/reducers/categoriaReducer";
 import { registroActions } from "../../../redux/reducers/registroReducer";
 import { toast } from "react-toastify";
 
+const Container = styled.div`
+  ${tw`flex 
+       flex-col 
+       items-center`
+       }
+`;
 
-// Estilização do título do gráfico
+const GraphContainer = styled.div`
+  ${tw`flex 
+      justify-center 
+      w-full 
+      max-w-4xl`
+      } /* Define a largura máxima do gráfico */
+`;
+
 const TextoGrafico = styled.h1`
   ${tw`text-xl 
-       text-center my-4`}
+       text-center 
+       my-4`
+       }
 `;
 
 const Valor = styled.div``;
@@ -86,19 +100,32 @@ const BarrasHorizontais = () => {
   });
 
   return (
-    <div>
+    <Container>
       <TextoGrafico>Gastos por Categoria</TextoGrafico>
-      <BarChart width={500} height={300} data={dadosGrafico} layout="vertical">
-        <XAxis type="number" />
-        <YAxis type="category" dataKey="nomeDaCategoria"/>
-        <Tooltip />
-        <CartesianGrid strokeDasharray="3 3" />
-        <Bar dataKey="valorTotalCategoria" fill="#FF8042">
-          <LabelList dataKey="valorFormatado" position="right" />
-        </Bar>
-      </BarChart>
-    </div>
+      <GraphContainer>
+        <BarChart
+          width={window.innerWidth < 640 ? window.innerWidth - 40 : 500} // Ajusta a largura do gráfico
+          height={300}
+          data={dadosGrafico}
+          layout="vertical"
+          fontSize={10}
+        >
+          <XAxis type="number" className="text-xs" />
+          <YAxis type="category" dataKey="nomeDaCategoria" className="text-xs" fontSize={10} fill="#000" />
+          <Tooltip />
+          <Bar dataKey="valorTotalCategoria" fill="#FF8042">
+            <LabelList
+              dataKey="valorFormatado"
+              position="insideLeft"
+              fill="#000"
+            />
+          </Bar>
+        </BarChart>
+      </GraphContainer>
+    </Container>
   );
 };
 
 export default BarrasHorizontais;
+
+

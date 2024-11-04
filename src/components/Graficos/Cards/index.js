@@ -52,7 +52,8 @@ const Saldo = styled.span`
 
 const TextoGrafico = styled.h1`
   ${tw`text-xl 
-       text-center my-4`
+       text-center 
+       my-4`
        }
 `;
 

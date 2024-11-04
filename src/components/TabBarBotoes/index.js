@@ -8,32 +8,38 @@ import { useNavigate } from "react-router-dom";
 
 const Container = styled.div`
   ${tw`bg-[#a1c082] 
-       w-1/12 
-       h-screen 
+       w-auto  
        flex 
        flex-col 
        items-center 
        justify-center 
-       mt-1`
+       mt-1 `
     }
 `;
 
 const ListaBotoes = styled.ul`
-  ${tw`space-y-4 
+  ${tw`
+       space-y-4 
        text-sm 
        font-medium 
        text-gray-500 
        dark:text-gray-400 
-       w-full`
-    }
+       sm:flex-row 
+       sm:p-3 
+       `}
 `;
 
-const ItemBotoes = styled.li.attrs({
-  className: `w-full 
-                flex 
-                items-center 
-                justify-center`,
-})``;
+const ItemBotoes = styled.li`
+  ${tw`flex 
+       items-center 
+       justify-center 
+       w-full 
+       sm:flex-1
+       md:flex-row
+       `}
+`;
+
+
 
 const TabBarBotoes = () => {
   const navigate = useNavigate();

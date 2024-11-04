@@ -44,7 +44,8 @@ const ContainerListas = styled.div`
          justify-center 
          space-y-4 
          md:space-y-0 
-         md:space-x-5`}
+         md:space-x-5`
+         }
 `;
 
 const ModalCategoria = ({ aberto, fechado }) => {

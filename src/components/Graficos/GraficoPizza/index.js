@@ -11,13 +11,15 @@ import { toast } from "react-toastify";
 
 const TextoGrafico = styled.h1`
     ${tw`text-xl 
-         text-center my-4`
+         text-center 
+         my-4`
          }
 `;
 
 const TextoLegenda = styled.h5`
     ${tw`text-sm 
-         text-start my-4`
+         text-start 
+         my-4`
          }
 `;
 
@@ -27,18 +29,23 @@ const Valor = styled.div`
 
 const Legend = styled.div`
     ${tw`flex 
-         flex-col mt-4`
+         flex-col 
+         mt-4`
          }
 `;
 
 const LegendItem = styled.div`
     ${tw`flex 
-         items-center mb-1`
+         items-center 
+         mb-1`
          }
 `;
 
 const Square = styled.div`
-    ${tw`w-4 h-4 mr-2`} 
+    ${tw`w-4 
+         h-4 
+         mr-2`
+         } 
     background-color: ${(props) => props.color};
 `;
 

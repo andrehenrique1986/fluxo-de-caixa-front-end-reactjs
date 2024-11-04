@@ -25,7 +25,13 @@ const formatarData = (data) => {
 };
 
 const Container = styled.div`
-  ${tw`p-5 bg-gray-100 mt-1 flex justify-center max-h-[500px] overflow-x-auto`}
+  ${tw`p-5 
+       bg-gray-100 
+       mt-1 flex 
+       justify-center 
+       max-h-[500px] 
+       overflow-x-auto`
+       }
   
   @media (max-width: 768px) {
     ${tw`p-2`}
@@ -33,7 +39,10 @@ const Container = styled.div`
 `;
 
 const Tabela = styled.table`
-  ${tw`w-full border-collapse text-center`}
+  ${tw`w-full 
+       border-collapse 
+       text-center`
+       }
   
   @media (max-width: 768px) {
     ${tw`min-w-[600px]`}
@@ -41,25 +50,40 @@ const Tabela = styled.table`
 `;
 
 const CabecalhoTabela = styled.thead`
-  ${tw`bg-gray-200 font-bold`}
+  ${tw`bg-gray-200 
+       font-bold`
+       }
 `;
 
 const LinhaTabela = styled.tr`
-  ${tw`border-b border-gray-300`}
+  ${tw`border-b 
+       border-gray-300`
+  }
 `;
 
 const CelulaTabela = styled.td`
-  ${tw`p-2 text-center`}
+  ${tw`p-2 
+       text-center`
+       }
   
   @media (max-width: 768px) {
-    ${tw`text-xs p-1`}
+    ${tw`text-xs 
+         p-1`
+         }
   }
 `;
 
 const CorpoTabela = styled.tbody``;
 
 const Icone = styled.div`
-  ${tw`cursor-pointer text-gray-600 hover:text-gray-800 text-xl flex justify-center items-center`}
+  ${tw`cursor-pointer 
+       text-gray-600 
+       hover:text-gray-800 
+       text-xl 
+       flex 
+       justify-center 
+       items-center`
+       }
   
   @media (max-width: 768px) {
     ${tw`text-lg`}

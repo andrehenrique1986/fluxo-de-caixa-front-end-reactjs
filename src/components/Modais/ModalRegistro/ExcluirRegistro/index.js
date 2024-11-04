@@ -3,10 +3,9 @@ import tw from "twin.macro";
 import BotaoPrincipal from "../../../BotaoPrincipal";
 import BotaoVermelho from "../../../BotaoVermelho";
 import { toast, ToastContainer } from "react-toastify";
-import { useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
-import { excluirRegistro, listarRegistro } from "../../../../api/registroAPI";
-import { registroActions } from "../../../../redux/reducers/registroReducer";
+import { excluirRegistro } from "../../../../api/registroAPI";
+
 
 const SobreposicaoModal = styled.div`
   ${tw`fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50`}
@@ -39,24 +38,23 @@ const formatDateToDisplay = (dateStr) => {
 };
 
 const ExcluirRegistro = ({
-  aberto,
-  fechado,
-  registroId,
-  dataFormatada,
-  fluxoSelecionado,
-  categoriaSelecionada,
-  subCategoriaSelecionada,
-  custoSelecionado,
-  formaDePagamentoSelecionada,
-  valorEscolhido,
-  categoriaId,
-  subcategoriaId,
-  custoId,
-  fluxoId,
-  formaDePagamentoId,
-  onSuccess
+      aberto,
+      fechado,
+      registroId,
+      dataFormatada,
+      fluxoSelecionado,
+      categoriaSelecionada,
+      subCategoriaSelecionada,
+      custoSelecionado,
+      formaDePagamentoSelecionada,
+      valorEscolhido,
+      categoriaId,
+      subcategoriaId,
+      custoId,
+      fluxoId,
+      formaDePagamentoId,
+      onSuccess
 }) => {
-  const dispatch = useDispatch();
   const [registro, setRegistro] = useState({});
 
   useEffect(() => {
@@ -75,7 +73,20 @@ const ExcluirRegistro = ({
       idFormaDePagamento: formaDePagamentoId || "",
       formaPagamento: formaDePagamentoSelecionada || ""
     });
-  }, [registroId, dataFormatada, valorEscolhido, fluxoId, fluxoSelecionado, categoriaId, categoriaSelecionada, subcategoriaId, subCategoriaSelecionada, custoId, custoSelecionado, formaDePagamentoId, formaDePagamentoSelecionada]);
+  }, [
+      registroId, 
+      dataFormatada, 
+      valorEscolhido, 
+      fluxoId, 
+      fluxoSelecionado, 
+      categoriaId, 
+      categoriaSelecionada, 
+      subcategoriaId, 
+      subCategoriaSelecionada, 
+      custoId, custoSelecionado, 
+      formaDePagamentoId, 
+      formaDePagamentoSelecionada
+    ]);
 
   const handleSemRegistro = () => {
     toast.warning("Por favor, preencha todos os campos obrigatórios.");

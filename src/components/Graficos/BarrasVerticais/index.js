@@ -3,7 +3,6 @@ import { useDispatch } from "react-redux";
 import {
   Bar,
   BarChart,
-  CartesianGrid,
   LabelList,
   Tooltip,
   XAxis,
@@ -17,10 +16,14 @@ import { calcularRegistroPorFormasDePagamento } from "../../../api/registroAPI";
 import { registroActions } from "../../../redux/reducers/registroReducer";
 import { toast } from "react-toastify";
 
-// Estilização do título do gráfico
+
+
+const Container = styled.div``;
+
 const TextoGrafico = styled.h1`
   ${tw`text-xl 
-       text-center my-4`
+       text-center 
+       my-4`
        }
 `;
 
@@ -84,18 +87,17 @@ const BarrasVerticais = () => {
     .sort((a, b) => b.valorTotalFormaDePagamento - a.valorTotalFormaDePagamento);
 
   return (
-    <div className="flex">
+    <Container>
       <TextoGrafico>Formas de pagamento</TextoGrafico>
-      <BarChart width={500} height={300} data={dadosGrafico}>
-        <XAxis type="category" dataKey="nome" />
-        <YAxis />
+      <BarChart width={400} height={300} data={dadosGrafico}>
+        <XAxis type="category" dataKey="nome" fontSize={10}/>
+        <YAxis  fontSize={10}/>
         <Tooltip />
-        <CartesianGrid strokeDasharray="3 3" />
-        <Bar dataKey="valorTotalFormaDePagamento" fill="#8884d8">
-          <LabelList dataKey="valorFormatado" position="top" />
+        <Bar dataKey="valorTotalFormaDePagamento" fill="#8884d8" >
+          <LabelList dataKey="valorFormatado" position="outside" fill="#000" fontSize={10}/>
         </Bar>
       </BarChart>
-    </div>
+    </Container>
   );
 };
 

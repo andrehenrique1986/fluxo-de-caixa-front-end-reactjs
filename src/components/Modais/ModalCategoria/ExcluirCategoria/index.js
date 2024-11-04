@@ -11,27 +11,59 @@ import { categoriaActions } from "../../../../redux/reducers/categoriaReducer";
 import { subcategoriaActions } from "../../../../redux/reducers/subcategoriaReducer";
 
 const SobreposicaoModal = styled.div`
-  ${tw`fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50`}
+  ${tw`fixed 
+       inset-0 
+       flex 
+       items-center 
+       justify-center 
+       z-50 
+       bg-black 
+       bg-opacity-50`
+       }
 `;
 
 const ConteudoModal = styled.div`
-  ${tw`flex flex-col bg-white rounded-lg shadow-lg w-full max-w-lg p-6 relative`}
+  ${tw`flex 
+       flex-col 
+       bg-white 
+       rounded-lg 
+       shadow-lg 
+       w-full 
+       max-w-lg 
+       p-6 
+       relative`
+       }
 `;
 
 const TituloModal = styled.h1`
-  ${tw`text-2xl mb-4 text-center`}
+  ${tw`text-2xl 
+       mb-4 
+       text-center`
+       }
 `;
 
 const Texto = styled.p`
-  ${tw`text-center text-xl`}
+  ${tw`text-center 
+       text-xl`
+       }
 `;
 
 const BotaoFechar = styled.button`
-  ${tw`absolute top-4 right-4 text-gray-500 hover:text-gray-700`}
+  ${tw`absolute 
+       top-4 
+       right-4 
+       text-gray-500 
+       hover:text-gray-700`
+       }
 `;
 
 const BotaoContainer = styled.div`
-  ${tw`flex flex-row justify-center mt-4 space-x-2`}
+  ${tw`flex 
+       flex-row 
+       justify-center 
+       mt-4 
+       space-x-2`
+       }
 `;
 
 const ExcluirCategoria = ({ aberto, fechado, categoriaId, nomeCategoriaSelecionadaClick, subcategoriaIds }) => {
